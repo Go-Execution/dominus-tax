@@ -1,8 +1,7 @@
 import { ArrowRight, Zap } from 'lucide-react';
 import Logo from './Logo';
 
-const HERO_IMAGE =
-  'https://images.pexels.com/photos/9790816/pexels-photo-9790816.jpeg?auto=compress&cs=tinysrgb&w=900';
+const HERO_IMAGE = '/owner.jpeg';
 
 export default function Hero() {
   const scrollTo = (href: string) =>
@@ -28,10 +27,7 @@ export default function Hero() {
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-8 items-center">
           {/* Left: Text content */}
           <div className="text-center lg:text-left order-2 lg:order-1">
-            {/* Large logo treatment */}
-            <div className="flex justify-center lg:justify-start mb-8 animate-fade-in">
-              <Logo size="lg" />
-            </div>
+           
 
             {/* Headline */}
             <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold leading-[1.15] mb-6 animate-fade-in-up">

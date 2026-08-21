@@ -9,7 +9,6 @@ import {
   Loader2,
   AlertCircle,
 } from 'lucide-react';
-import { supabase } from '@/lib/supabase';
 
 const SERVICE_OPTIONS = [
   'Individual Tax Preparation',
@@ -53,17 +52,11 @@ export default function Contact() {
     setErrorMsg('');
 
     try {
-      const { error } = await supabase.from('appointments').insert({
-        name: form.name,
-        email: form.email,
-        phone: form.phone,
-        service: form.service,
-        preferred_date: form.preferred_date || null,
-        preferred_time: form.preferred_time,
-        message: form.message || null,
-      });
+      // Database disabled — simulate a short delay and succeed
+      await new Promise((resolve) => setTimeout(resolve, 800));
 
-      if (error) throw error;
+      // TODO: Re-enable Supabase insert when database is ready
+      // const { error } = await supabase.from('appointments').insert({ ... });
 
       setStatus('success');
       setForm({

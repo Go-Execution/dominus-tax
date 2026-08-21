@@ -8,8 +8,7 @@ const ICONS: Record<string, React.ElementType> = {
   Crown,
 };
 
-const ABOUT_IMAGE =
-  'https://images.pexels.com/photos/5398962/pexels-photo-5398962.jpeg?auto=compress&cs=tinysrgb&w=900';
+const ABOUT_IMAGE = '/owner.jpeg';
 
 export default function About() {
   return (
