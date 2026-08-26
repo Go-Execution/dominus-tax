@@ -124,6 +124,12 @@ export default function Footer() {
           <p className="text-dominus-text-secondary text-xs text-center md:text-left">
             &copy; {new Date().getFullYear()} Dominus Tax Consultants, LLC. All rights reserved.
           </p>
+          <a
+            href="#terms"
+            className="text-dominus-text-primary/50 hover:text-dominus-gold text-xs transition-colors font-montserrat tracking-wide"
+          >
+            Terms &amp; Conditions
+          </a>
           <p className="font-montserrat text-xs tracking-[0.2em] uppercase text-dominus-gold/70 text-center">
             Expertise That Empowers &bull; Success That Builds Legacy
           </p>
