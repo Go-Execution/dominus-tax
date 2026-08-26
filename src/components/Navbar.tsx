@@ -53,11 +53,11 @@ export default function Navbar() {
 
           <div className="hidden lg:flex items-center gap-4">
             <a
-              href="tel:4322058409"
+              href="tel:4322563225"
               className="flex items-center gap-2 text-dominus-gold-light/80 hover:text-dominus-gold transition-colors"
             >
               <Phone className="w-4 h-4" />
-              <span className="font-montserrat text-sm font-medium">432-205-8409</span>
+              <span className="font-montserrat text-sm font-medium">432-256-3225</span>
             </a>
             <button
               onClick={() => handleNav('#contact')}
@@ -96,9 +96,9 @@ export default function Navbar() {
             </button>
           ))}
           <div className="flex flex-col gap-5 mt-6">
-            <a href="tel:4322058409" className="flex items-center justify-center gap-2 text-dominus-gold-light">
+            <a href="tel:4322563225" className="flex items-center justify-center gap-2 text-dominus-gold-light">
               <Phone className="w-5 h-5" />
-              <span className="font-montserrat">432-205-8409</span>
+              <span className="font-montserrat">432-256-3225</span>
             </a>
             <button
               onClick={() => handleNav('#contact')}

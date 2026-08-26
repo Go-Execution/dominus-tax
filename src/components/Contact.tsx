@@ -36,7 +36,7 @@ export default function Contact() {
   const activeForm = TABS.find((t) => t.id === activeTab)!;
 
   return (
-    <section id="contact" className="relative py-24 lg:py-32 overflow-hidden">
+    <section id="contact" className="relative py-24 lg:py-32">
       <div className="absolute inset-0 bg-gradient-to-b from-dominus-black via-dominus-charcoal/40 to-dominus-black" />
       <div className="absolute inset-0 gold-radial opacity-25" />
 
@@ -58,10 +58,10 @@ export default function Contact() {
 
         <div className="grid lg:grid-cols-5 gap-8">
           {/* Left: Contact info */}
-          <div className="lg:col-span-2 space-y-6 reveal">
+          <div className="lg:col-span-2 space-y-6 lg:sticky lg:top-28 self-start">
             {/* Contact cards */}
             <a
-              href="tel:4322058409"
+              href="tel:4322563225"
               className="luxury-card rounded-2xl p-6 flex items-center gap-4 group"
             >
               <div className="w-12 h-12 rounded-xl bg-dominus-emerald/15 border border-dominus-emerald/30 flex items-center justify-center flex-shrink-0">
@@ -72,7 +72,7 @@ export default function Contact() {
                   Call Us
                 </p>
                 <p className="font-serif text-lg text-dominus-text-primary group-hover:text-dominus-gold-light transition-colors">
-                  432-205-8409
+                  432-256-3225
                 </p>
               </div>
             </a>

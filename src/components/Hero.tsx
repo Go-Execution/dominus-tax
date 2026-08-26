@@ -1,7 +1,7 @@
 import { ArrowRight, Zap } from 'lucide-react';
 import Logo from './Logo';
 
-const HERO_IMAGE = '/owner.jpeg';
+const HERO_IMAGE = '/logo.jpeg';
 
 export default function Hero() {
   const scrollTo = (href: string) =>
@@ -27,7 +27,7 @@ export default function Hero() {
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-8 items-center">
           {/* Left: Text content */}
           <div className="text-center lg:text-left order-2 lg:order-1">
-           
+
 
             {/* Headline */}
             <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold leading-[1.15] mb-6 animate-fade-in-up">
@@ -69,22 +69,13 @@ export default function Hero() {
               <div className="absolute -inset-1 bg-gradient-gold opacity-30 rounded-3xl" />
 
               {/* Photo container */}
-              <div className="relative rounded-3xl overflow-hidden border-2 border-dominus-gold/40 shadow-2xl">
+              <div className="relative rounded-3xl overflow-hidden border-2 border-dominus-gold/40 shadow-2xl p-4 bg-dominus-charcoal-light/50 flex items-center justify-center">
                 <img
                   src={HERO_IMAGE}
-                  alt="Amanda D. Atchison, Owner of Dominus Tax Consultants"
-                  className="w-full h-[480px] lg:h-[560px] object-cover"
+                  alt="Dominus Tax Consultants Logo"
+                  className="w-full h-auto max-h-[500px] object-contain rounded-2xl"
                   loading="eager"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-dominus-black via-transparent to-transparent" />
-
-                {/* Name plate */}
-                <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-dominus-black/95 to-transparent">
-                  <p className="font-script text-2xl text-dominus-gold-light mb-1">Amanda D. Atchison</p>
-                  <p className="font-montserrat text-xs tracking-[0.25em] uppercase text-dominus-text-primary/60">
-                    Owner &amp; Lead Consultant
-                  </p>
-                </div>
               </div>
 
               {/* Floating badge */}

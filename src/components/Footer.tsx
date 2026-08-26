@@ -28,7 +28,7 @@ export default function Footer() {
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
           {/* Brand column */}
           <div className="lg:col-span-1">
-            <Logo size="md" className="mb-5" />
+            <Logo size="xl" className="mb-5" />
             <p className="text-dominus-text-primary/60 text-sm leading-relaxed mb-4">
               The Power Behind Your Financial Success. Premium tax preparation and consulting
               serving clients nationwide.
@@ -84,11 +84,11 @@ export default function Footer() {
             <ul className="space-y-4">
               <li>
                 <a
-                  href="tel:4322058409"
+                  href="tel:4322563225"
                   className="flex items-center gap-3 text-dominus-text-primary/60 hover:text-dominus-gold-light text-sm transition-colors"
                 >
                   <Phone className="w-4 h-4 text-dominus-gold flex-shrink-0" />
-                  432-205-8409
+                  432-256-3225
                 </a>
               </li>
               <li>

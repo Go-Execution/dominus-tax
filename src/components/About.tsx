@@ -30,14 +30,15 @@ export default function About() {
                   className="w-full h-[500px] lg:h-[580px] object-cover"
                   loading="lazy"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-dominus-black/60 via-transparent to-transparent" />
-              </div>
+                <div className="absolute inset-0 bg-gradient-to-t from-dominus-black via-transparent to-transparent" />
 
-              {/* Signature script */}
-              <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 bg-dominus-charcoal px-6 py-3 rounded-xl border border-dominus-gold/30 shadow-gold-glow">
-                <p className="font-script text-2xl text-dominus-gold-light whitespace-nowrap">
-                  Amanda D. Atchison
-                </p>
+                {/* Name plate */}
+                <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-dominus-black/95 to-transparent text-center lg:text-left">
+                  <p className="font-script text-2xl text-dominus-gold-light mb-1">Amanda D. Atchison</p>
+                  <p className="font-montserrat text-xs tracking-[0.25em] uppercase text-dominus-text-primary/60">
+                    Owner &amp; Lead Consultant
+                  </p>
+                </div>
               </div>
             </div>
           </div>
