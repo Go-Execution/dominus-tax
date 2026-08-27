@@ -12,7 +12,6 @@ const SERVICE_LINKS = [
   'Individual Tax Preparation',
   'Business Tax Preparation',
   'Tax Planning & Strategy',
-  'Tax Resolution Services',
   'Credit Repair & Restoration',
 ];
 
@@ -110,9 +109,7 @@ export default function Footer() {
               <li className="flex items-start gap-3 text-dominus-text-primary/60 text-sm">
                 <Clock className="w-4 h-4 text-dominus-gold flex-shrink-0 mt-0.5" />
                 <span>
-                  Mon–Fri: 9 AM – 7 PM
-                  <br />
-                  Sat–Sun: 10 AM – 6 PM
+                  Mon–Sat: 9 AM – 7 PM
                 </span>
               </li>
               <li className="flex items-start gap-3 text-dominus-text-primary/60 text-sm">
