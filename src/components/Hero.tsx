@@ -36,11 +36,11 @@ export default function Hero() {
             </h1>
 
             {/* Subheadline */}
-            <p className="text-lg lg:text-xl text-dominus-text-primary/70 mb-10 max-w-xl mx-auto lg:mx-0 leading-relaxed animate-fade-in-up" style={{ animationDelay: '0.15s' }}>
+            {/* <p className="text-lg lg:text-xl text-dominus-text-primary/70 mb-10 max-w-xl mx-auto lg:mx-0 leading-relaxed animate-fade-in-up" style={{ animationDelay: '0.15s' }}>
               Professional tax preparation &amp; strategy that delivers{' '}
               <span className="text-dominus-gold-light font-semibold">more money</span> and{' '}
               <span className="text-dominus-gold-light font-semibold">less stress</span>.
-            </p>
+            </p> */}
 
             {/* CTAs */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
