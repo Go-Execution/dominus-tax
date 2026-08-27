@@ -14,9 +14,24 @@ export default function useReveal() {
       { threshold: 0.12, rootMargin: '0px 0px -60px 0px' }
     );
 
-    const elements = document.querySelectorAll('.reveal');
-    elements.forEach((el) => observer.observe(el));
+    const observeElements = () => {
+      const elements = document.querySelectorAll('.reveal:not(.visible)');
+      elements.forEach((el) => observer.observe(el));
+    };
 
-    return () => observer.disconnect();
+    // Initial observation
+    observeElements();
+
+    // Observe future DOM changes
+    const mutationObserver = new MutationObserver(() => {
+      observeElements();
+    });
+
+    mutationObserver.observe(document.body, { childList: true, subtree: true });
+
+    return () => {
+      observer.disconnect();
+      mutationObserver.disconnect();
+    };
   }, []);
 }

@@ -66,45 +66,55 @@ export default function FloatingForm() {
       </button>
 
       {/* Modal Overlay */}
-      {isOpen && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 lg:p-8 bg-dominus-black/90 backdrop-blur-sm">
-          {/* Modal Content */}
-          <div className="relative w-full max-w-5xl h-full max-h-[90vh] bg-gradient-to-br from-dominus-charcoal-light to-dominus-charcoal rounded-3xl border border-dominus-gold/30 shadow-card flex flex-col overflow-hidden animate-fade-in">
-            {/* Close button */}
-            <button
-              onClick={() => setIsOpen(false)}
-              className="absolute top-4 right-4 z-10 w-10 h-10 bg-dominus-black/50 rounded-full flex items-center justify-center text-dominus-gold hover:text-dominus-gold-light hover:bg-dominus-black transition-colors"
-            >
-              <X className="w-6 h-6" />
-            </button>
+      <div 
+        className={`fixed inset-0 z-[100] flex items-center justify-center p-0 sm:p-6 lg:p-8 bg-dominus-black/95 backdrop-blur-sm transition-all duration-300 ${
+          isOpen ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none'
+        }`}
+      >
+        {/* Modal Content */}
+        <div 
+          className={`relative w-full sm:max-w-5xl h-[100dvh] sm:h-auto sm:max-h-[90vh] bg-dominus-charcoal-light sm:bg-gradient-to-br from-dominus-charcoal-light to-dominus-charcoal sm:rounded-3xl sm:border border-dominus-gold/30 shadow-card flex flex-col overflow-hidden transition-transform duration-300 delay-75 ${
+            isOpen ? 'scale-100 translate-y-0' : 'scale-95 translate-y-4'
+          }`}
+        >
 
-            {/* Tab switcher */}
-            <div className="flex border-b border-dominus-gold/20 flex-shrink-0 bg-dominus-charcoal pt-2 px-2 lg:px-6">
-              {TABS.map((tab) => (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`flex-1 py-5 px-6 font-montserrat text-sm font-semibold tracking-wide uppercase transition-all duration-300 relative ${
-                    activeTab === tab.id
-                      ? 'text-dominus-gold'
-                      : 'text-dominus-text-primary/50 hover:text-dominus-text-primary/80'
-                  }`}
-                >
-                  {tab.label}
-                  {activeTab === tab.id && (
-                    <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-gold" />
-                  )}
-                </button>
-              ))}
+            {/* Header & Tabs */}
+            <div className="flex items-center justify-between border-b border-dominus-gold/20 flex-shrink-0 bg-dominus-charcoal px-2 lg:px-6">
+              <div className="flex flex-1">
+                {TABS.map((tab) => (
+                  <button
+                    key={tab.id}
+                    onClick={() => setActiveTab(tab.id)}
+                    className={`py-4 sm:py-5 px-3 sm:px-6 font-montserrat text-xs sm:text-sm font-semibold tracking-wide uppercase transition-all duration-300 relative ${
+                      activeTab === tab.id
+                        ? 'text-dominus-gold'
+                        : 'text-dominus-text-primary/50 hover:text-dominus-text-primary/80'
+                    }`}
+                  >
+                    {tab.label}
+                    {activeTab === tab.id && (
+                      <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-gold" />
+                    )}
+                  </button>
+                ))}
+              </div>
+              
+              {/* Close button */}
+              <button
+                onClick={() => setIsOpen(false)}
+                className="ml-2 w-10 h-10 rounded-full flex items-center justify-center text-dominus-gold hover:text-dominus-gold-light hover:bg-dominus-black/50 transition-colors"
+                aria-label="Close modal"
+              >
+                <X className="w-6 h-6" />
+              </button>
             </div>
 
             {/* Form container - Scrollable */}
-            <div className="flex-1 overflow-y-auto p-4 lg:p-8">
+            <div className="flex-1 overflow-y-auto p-0 sm:p-4 lg:p-8 bg-white/5 sm:bg-transparent">
               <JotFormEmbed src={activeForm.formSrc} />
             </div>
           </div>
         </div>
-      )}
     </>
   );
 }

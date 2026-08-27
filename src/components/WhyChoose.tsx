@@ -23,8 +23,7 @@ export default function WhyChoose() {
             <span className="gold-text">Dominus</span>
           </h2>
           <p className="text-dominus-text-primary/60 max-w-2xl mx-auto text-lg">
-            We don&apos;t just prepare taxes — we partner with you to build lasting financial
-            strength and peace of mind.
+            Committed to serving every client with excellence, protecting their financial interests, and creating opportunities for lasting prosperity.
           </p>
         </div>
 

@@ -70,11 +70,5 @@ export const WHY_CHOOSE = [
   },
 ] as const;
 
-export const BRAND_VALUES = [
-  { name: 'Strategy', icon: 'Brain' },
-  { name: 'Integrity', icon: 'Scale' },
-  { name: 'Value', icon: 'Gem' },
-  { name: 'Success', icon: 'Crown' },
-] as const;
 
 export const TRUST_BAR = ['Professional', 'Strategic', 'Results-Driven'];

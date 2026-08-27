@@ -58,13 +58,6 @@ export default function Hero() {
                 Book Your Appointment
                 <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
               </button>
-              <button
-                onClick={() => scrollTo('#tax-advance')}
-                className="btn-gold-outline px-8 py-4 rounded-xl text-sm sm:text-base flex items-center justify-center gap-2"
-              >
-                <Zap className="w-5 h-5 text-dominus-gold-bright" />
-                Get Tax Advance
-              </button>
             </div>
           </div>
 

@@ -1,4 +1,4 @@
-const ITEMS = ['Professional', 'Strategic', 'Results-Driven'];
+const ITEMS = ['Where Tax Strategy Builds Legacy'];
 
 export default function TrustBar() {
   return (
