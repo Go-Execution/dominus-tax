@@ -4,8 +4,15 @@ import Logo from './Logo';
 const HERO_IMAGE = '/logo.jpeg';
 
 export default function Hero() {
-  const scrollTo = (href: string) =>
-    document.querySelector(href)?.scrollIntoView({ behavior: 'smooth' });
+  const scrollTo = (href: string) => {
+    const target = document.querySelector(href);
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth' });
+      window.history.pushState(null, '', href);
+    } else {
+      window.location.hash = href;
+    }
+  };
 
   return (
     <section
@@ -45,7 +52,7 @@ export default function Hero() {
             {/* CTAs */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
               <button
-                onClick={() => scrollTo('#contact')}
+                onClick={() => window.dispatchEvent(new CustomEvent('open-contact-form'))}
                 className="btn-gold px-8 py-4 rounded-xl text-sm sm:text-base flex items-center justify-center gap-2 group"
               >
                 Book Your Appointment

@@ -17,8 +17,15 @@ const SERVICE_LINKS = [
 ];
 
 export default function Footer() {
-  const handleNav = (href: string) =>
-    document.querySelector(href)?.scrollIntoView({ behavior: 'smooth' });
+  const handleNav = (href: string) => {
+    const target = document.querySelector(href);
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth' });
+      window.history.pushState(null, '', href);
+    } else {
+      window.location.hash = href;
+    }
+  };
 
   return (
     <footer className="relative bg-dominus-charcoal border-t border-dominus-gold/20 overflow-hidden">

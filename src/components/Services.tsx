@@ -21,8 +21,15 @@ const ICONS: Record<string, React.ElementType> = {
 };
 
 export default function Services() {
-  const scrollTo = (href: string) =>
-    document.querySelector(href)?.scrollIntoView({ behavior: 'smooth' });
+  const scrollTo = (href: string) => {
+    const target = document.querySelector(href);
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth' });
+      window.history.pushState(null, '', href);
+    } else {
+      window.location.hash = href;
+    }
+  };
 
   return (
     <section id="services" className="relative py-24 lg:py-32 overflow-hidden">

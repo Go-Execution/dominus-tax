@@ -21,7 +21,13 @@ export default function Navbar() {
 
   const handleNav = (href: string) => {
     setOpen(false);
-    document.querySelector(href)?.scrollIntoView({ behavior: 'smooth' });
+    const target = document.querySelector(href);
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth' });
+      window.history.pushState(null, '', href);
+    } else {
+      window.location.hash = href;
+    }
   };
 
   return (
@@ -60,7 +66,10 @@ export default function Navbar() {
               <span className="font-montserrat text-sm font-medium">432-256-3225</span>
             </a>
             <button
-              onClick={() => handleNav('#contact')}
+              onClick={() => {
+                setOpen(false);
+                window.dispatchEvent(new CustomEvent('open-contact-form'));
+              }}
               className="btn-gold px-6 py-2.5 rounded-lg text-sm"
             >
               Book Appointment
@@ -101,7 +110,10 @@ export default function Navbar() {
               <span className="font-montserrat">432-256-3225</span>
             </a>
             <button
-              onClick={() => handleNav('#contact')}
+              onClick={() => {
+                setOpen(false);
+                window.dispatchEvent(new CustomEvent('open-contact-form'));
+              }}
               className="btn-gold px-8 py-3 rounded-lg text-sm"
             >
               Book Appointment

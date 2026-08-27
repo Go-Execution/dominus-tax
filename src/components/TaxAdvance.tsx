@@ -1,8 +1,15 @@
 import { Zap, Clock, ShieldCheck, CheckCircle, ArrowRight } from 'lucide-react';
 
 export default function TaxAdvance() {
-  const scrollTo = (href: string) =>
-    document.querySelector(href)?.scrollIntoView({ behavior: 'smooth' });
+  const scrollTo = (href: string) => {
+    const target = document.querySelector(href);
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth' });
+      window.history.pushState(null, '', href);
+    } else {
+      window.location.hash = href;
+    }
+  };
 
   return (
     <section id="tax-advance" className="relative py-24 lg:py-32 overflow-hidden">

@@ -1,13 +1,3 @@
-import { Brain, Scale, Gem, Crown } from 'lucide-react';
-import { BRAND_VALUES } from '@/data/content';
-
-const ICONS: Record<string, React.ElementType> = {
-  Brain,
-  Scale,
-  Gem,
-  Crown,
-};
-
 const ABOUT_IMAGE = '/owner.jpeg';
 
 export default function About() {
@@ -53,7 +43,7 @@ export default function About() {
               <span className="gold-text">Financial Future</span>
             </h2>
 
-            <div className="space-y-4 text-dominus-text-primary/70 text-lg leading-relaxed mb-8">
+            <div className="space-y-4 text-dominus-text-primary/70 text-lg leading-relaxed">
               <p>
                 Amanda D. Atchison founded Dominus Tax Consultants with a singular vision: to give
                 individuals and business owners the power, strategy, and confidence to take control
@@ -70,24 +60,6 @@ export default function About() {
                 deliver results with a personal touch — because behind every return is a person, a
                 family, and a future worth protecting.
               </p>
-            </div>
-
-            {/* Brand values */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-              {BRAND_VALUES.map((value) => {
-                const Icon = ICONS[value.icon] ?? Brain;
-                return (
-                  <div
-                    key={value.name}
-                    className="flex flex-col items-center gap-2 p-4 rounded-xl bg-dominus-charcoal border border-dominus-gold/15 hover:border-dominus-gold/40 transition-all"
-                  >
-                    <Icon className="w-6 h-6 text-dominus-gold" />
-                    <span className="font-montserrat text-sm font-semibold text-dominus-text-primary/90 tracking-wide">
-                      {value.name}
-                    </span>
-                  </div>
-                );
-              })}
             </div>
           </div>
         </div>
