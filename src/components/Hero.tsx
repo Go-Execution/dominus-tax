@@ -31,8 +31,8 @@ export default function Hero() {
 
             {/* Headline */}
             <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold leading-[1.15] mb-6 animate-fade-in-up">
-              <span className="text-dominus-text-primary">The Power Behind </span>
-              <span className="gold-text">Your Financial Success</span>
+              <span className="text-dominus-text-primary">Tax Preparation from someone who understrand the people who </span>
+              <span className="gold-text">Power the Permian</span>
             </h1>
 
             {/* Subheadline */}
