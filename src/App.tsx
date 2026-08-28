@@ -76,9 +76,9 @@ export default function App() {
         <Hero />
         <TrustBar />
         <Services />
+        <About />
         <TaxAdvance />
         <WhyChoose />
-        <About />
         <Testimonials />
       </main>
       <Footer />

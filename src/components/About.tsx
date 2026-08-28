@@ -5,6 +5,13 @@ export default function About() {
     <section id="about" className="relative py-24 lg:py-32 overflow-hidden">
       <div className="absolute inset-0 gold-radial opacity-30" />
       <div className="relative max-w-7xl mx-auto px-5 lg:px-8">
+        {/* Mobile Header (Eyebrow above photo) */}
+        <div className="text-center mb-8 lg:hidden reveal">
+          <span className="ornament font-montserrat text-xs tracking-[0.3em] uppercase text-dominus-gold/70">
+            Meet The Owner
+          </span>
+        </div>
+
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           {/* Left: Photo */}
           <div className="reveal relative">
@@ -35,10 +42,10 @@ export default function About() {
 
           {/* Right: Content */}
           <div className="reveal">
-            <span className="ornament font-montserrat text-xs tracking-[0.3em] uppercase text-dominus-gold/70">
+            <span className="hidden lg:inline-flex ornament font-montserrat text-xs tracking-[0.3em] uppercase text-dominus-gold/70">
               Meet The Owner
             </span>
-            <h2 className="font-serif text-4xl lg:text-5xl font-bold mt-5 mb-6">
+            <h2 className="font-serif text-4xl lg:text-5xl font-bold mt-0 lg:mt-5 mb-6">
               <span className="text-dominus-text-primary">Empowering Your </span>
               <span className="gold-text">Financial Future</span>
             </h2>
