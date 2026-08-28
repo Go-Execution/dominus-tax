@@ -170,7 +170,7 @@ export default function TermsConditions() {
               <div className="mt-4 space-y-2 text-dominus-text-primary/90">
                 <p><span className="text-dominus-gold font-semibold">Dominus Tax Consultants, LLC</span></p>
                 <p>Phone: <a href="tel:4322563225" className="text-dominus-gold hover:text-dominus-gold-light transition-colors">432-256-3225</a></p>
-                <p>Email: <a href="mailto:dominustaxconsultantsllc@gmail.com" className="text-dominus-gold hover:text-dominus-gold-light transition-colors">dominustaxconsultantsllc@gmail.com</a></p>
+                <p>Email: <a href="mailto:info@dominustaxconsultants.com" className="text-dominus-gold hover:text-dominus-gold-light transition-colors">info@dominustaxconsultants.com</a></p>
               </div>
             </Section>
           </div>

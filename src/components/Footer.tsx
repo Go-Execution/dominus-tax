@@ -99,11 +99,11 @@ export default function Footer() {
               </li>
               <li>
                 <a
-                  href="mailto:dominustaxconsultantsllc@gmail.com"
+                  href="mailto:info@dominustaxconsultants.com"
                   className="flex items-start gap-3 text-dominus-text-primary/60 hover:text-dominus-gold-light text-sm transition-colors break-all"
                 >
                   <Mail className="w-4 h-4 text-dominus-gold flex-shrink-0 mt-0.5" />
-                  dominustaxconsultantsllc@gmail.com
+                  info@dominustaxconsultants.com
                 </a>
               </li>
               <li className="flex items-start gap-3 text-dominus-text-primary/60 text-sm">

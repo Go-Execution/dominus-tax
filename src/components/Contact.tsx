@@ -47,7 +47,7 @@ export default function Contact() {
           </a>
 
           <a
-            href="mailto:dominustaxconsultantsllc@gmail.com"
+            href="mailto:info@dominustaxconsultants.com"
             className="luxury-card rounded-2xl p-6 flex items-center gap-4 group"
           >
             <div className="w-12 h-12 rounded-xl bg-dominus-emerald/15 border border-dominus-emerald/30 flex items-center justify-center flex-shrink-0">
@@ -58,7 +58,7 @@ export default function Contact() {
                 Email Us
               </p>
               <p className="font-serif text-base text-dominus-text-primary group-hover:text-dominus-gold-light transition-colors truncate">
-                dominustaxconsultantsllc@gmail.com
+                info@dominustaxconsultants.com
               </p>
             </div>
           </a>

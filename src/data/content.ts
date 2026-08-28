@@ -18,12 +18,6 @@ export const SERVICES = [
     icon: 'Target',
   },
   {
-    title: 'Tax Resolution Services',
-    description:
-      'Resolve IRS notices, back taxes, liens, and levies with experienced representation that protects your assets and peace of mind.',
-    icon: 'ShieldCheck',
-  },
-  {
     title: 'Notary Services',
     description:
       'Reliable notary services for contracts, affidavits, real estate documents, and more — accurate, professional, and timely.',
