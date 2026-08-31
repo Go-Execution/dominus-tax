@@ -66,10 +66,7 @@ export default function Navbar() {
               <span className="font-montserrat text-sm font-medium">432-256-3225</span>
             </a>
             <button
-              onClick={() => {
-                setOpen(false);
-                window.dispatchEvent(new CustomEvent('open-contact-form'));
-              }}
+              onClick={() => handleNav('#booking')}
               className="btn-gold px-6 py-2.5 rounded-lg text-sm"
             >
               Book Appointment
@@ -110,10 +107,7 @@ export default function Navbar() {
               <span className="font-montserrat">432-256-3225</span>
             </a>
             <button
-              onClick={() => {
-                setOpen(false);
-                window.dispatchEvent(new CustomEvent('open-contact-form'));
-              }}
+              onClick={() => handleNav('#booking')}
               className="btn-gold px-8 py-3 rounded-lg text-sm"
             >
               Book Appointment

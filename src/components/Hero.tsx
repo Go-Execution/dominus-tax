@@ -52,7 +52,7 @@ export default function Hero() {
             {/* CTAs */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
               <button
-                onClick={() => window.dispatchEvent(new CustomEvent('open-contact-form'))}
+                onClick={() => scrollTo('#booking')}
                 className="btn-gold px-8 py-4 rounded-xl text-sm sm:text-base flex items-center justify-center gap-2 group"
               >
                 Book Your Appointment

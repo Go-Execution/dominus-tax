@@ -6,6 +6,7 @@ import Services from '@/components/Services';
 import TaxAdvance from '@/components/TaxAdvance';
 import WhyChoose from '@/components/WhyChoose';
 import About from '@/components/About';
+import Booking from '@/components/Booking';
 import Testimonials from '@/components/Testimonials';
 import Contact from '@/components/Contact';
 import Footer from '@/components/Footer';
@@ -62,6 +63,7 @@ export default function App() {
         <Navbar />
         <main>
           <Contact />
+          <Booking />
         </main>
         <Footer />
         <FloatingForm />
@@ -79,6 +81,7 @@ export default function App() {
         <About />
         <TaxAdvance />
         <WhyChoose />
+        <Booking />
         <Testimonials />
       </main>
       <Footer />
