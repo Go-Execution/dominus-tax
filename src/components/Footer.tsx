@@ -13,6 +13,7 @@ const SERVICE_LINKS = [
   'Business Tax Preparation',
   'Tax Planning & Strategy',
   'Credit Repair & Restoration',
+  'Notary Services',
 ];
 
 export default function Footer() {

@@ -75,9 +75,7 @@ export default function Contact() {
                 Office Hours
               </p>
               <p className="text-dominus-text-primary/90 text-sm leading-relaxed">
-                Mon – Fri: 9:00 AM – 7:00 PM
-                <br />
-                Sat – Sun: 10:00 AM – 6:00 PM
+                Mon–Sat: 9 AM – 7 PM
               </p>
             </div>
           </div>
