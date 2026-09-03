@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Menu, X, Phone } from 'lucide-react';
+import { Menu, X, Phone, Instagram, Facebook, Linkedin } from 'lucide-react';
 import Logo from './Logo';
 
 const NAV_LINKS = [
@@ -112,6 +112,37 @@ export default function Navbar() {
             >
               Book Appointment
             </button>
+          </div>
+
+          {/* Social Links in Mobile Menu */}
+          <div className="flex items-center gap-4 mt-2">
+            <a
+              href="https://www.instagram.com/dominustaxconsultants"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Instagram"
+              className="w-10 h-10 rounded-full bg-dominus-charcoal border border-dominus-gold/30 flex items-center justify-center text-dominus-gold hover:text-dominus-gold-light hover:border-dominus-gold/70 transition-colors"
+            >
+              <Instagram className="w-4 h-4" />
+            </a>
+            <a
+              href="https://www.facebook.com/share/1HozbqjgoQ/"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Facebook"
+              className="w-10 h-10 rounded-full bg-dominus-charcoal border border-dominus-gold/30 flex items-center justify-center text-dominus-gold hover:text-dominus-gold-light hover:border-dominus-gold/70 transition-colors"
+            >
+              <Facebook className="w-4 h-4" />
+            </a>
+            <a
+              href="https://www.linkedin.com/posts/dominustaxconsultants_dominustaxconsultants-taxpreparation-taxservices-activity-7499141526980132866-4-Cm?utm_source=share&utm_medium=member_desktop&rcm=ACoAAA-1A2MBoSEkpRCAhYIq5dsM-ctjB6dyMa4"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="LinkedIn"
+              className="w-10 h-10 rounded-full bg-dominus-charcoal border border-dominus-gold/30 flex items-center justify-center text-dominus-gold hover:text-dominus-gold-light hover:border-dominus-gold/70 transition-colors"
+            >
+              <Linkedin className="w-4 h-4" />
+            </a>
           </div>
         </nav>
       </div>

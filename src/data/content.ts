@@ -66,3 +66,18 @@ export const WHY_CHOOSE = [
 
 
 export const TRUST_BAR = ['Professional', 'Strategic', 'Results-Driven'];
+
+export const SOCIAL_LINKS = [
+  {
+    name: 'Instagram',
+    href: 'https://www.instagram.com/dominustaxconsultants',
+  },
+  {
+    name: 'Facebook',
+    href: 'https://www.facebook.com/share/1HozbqjgoQ/',
+  },
+  {
+    name: 'LinkedIn',
+    href: 'https://www.linkedin.com/posts/dominustaxconsultants_dominustaxconsultants-taxpreparation-taxservices-activity-7499141526980132866-4-Cm?utm_source=share&utm_medium=member_desktop&rcm=ACoAAA-1A2MBoSEkpRCAhYIq5dsM-ctjB6dyMa4',
+  },
+] as const;

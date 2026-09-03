@@ -1,4 +1,4 @@
-import { Phone, Mail, Clock, MapPin } from 'lucide-react';
+import { Phone, Mail, Clock, MapPin, Instagram, Facebook, Linkedin } from 'lucide-react';
 import Logo from './Logo';
 
 const QUICK_LINKS = [
@@ -39,9 +39,40 @@ export default function Footer() {
               The Power Behind Your Financial Success. Premium tax preparation and consulting
               serving clients nationwide.
             </p>
-            <p className="font-script text-xl text-dominus-gold-light">
+            <p className="font-script text-xl text-dominus-gold-light mb-6">
               Prepare Today. Prosper Tomorrow.
             </p>
+
+            {/* Social Links */}
+            <div className="flex items-center gap-3">
+              <a
+                href="https://www.instagram.com/dominustaxconsultants"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Instagram"
+                className="w-10 h-10 rounded-full bg-dominus-black/60 border border-dominus-gold/25 flex items-center justify-center text-dominus-gold hover:text-dominus-gold-light hover:border-dominus-gold/60 hover:bg-dominus-gold/10 hover:shadow-gold-glow hover:scale-105 transition-all duration-300"
+              >
+                <Instagram className="w-4 h-4" />
+              </a>
+              <a
+                href="https://www.facebook.com/share/1HozbqjgoQ/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Facebook"
+                className="w-10 h-10 rounded-full bg-dominus-black/60 border border-dominus-gold/25 flex items-center justify-center text-dominus-gold hover:text-dominus-gold-light hover:border-dominus-gold/60 hover:bg-dominus-gold/10 hover:shadow-gold-glow hover:scale-105 transition-all duration-300"
+              >
+                <Facebook className="w-4 h-4" />
+              </a>
+              <a
+                href="https://www.linkedin.com/posts/dominustaxconsultants_dominustaxconsultants-taxpreparation-taxservices-activity-7499141526980132866-4-Cm?utm_source=share&utm_medium=member_desktop&rcm=ACoAAA-1A2MBoSEkpRCAhYIq5dsM-ctjB6dyMa4"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="LinkedIn"
+                className="w-10 h-10 rounded-full bg-dominus-black/60 border border-dominus-gold/25 flex items-center justify-center text-dominus-gold hover:text-dominus-gold-light hover:border-dominus-gold/60 hover:bg-dominus-gold/10 hover:shadow-gold-glow hover:scale-105 transition-all duration-300"
+              >
+                <Linkedin className="w-4 h-4" />
+              </a>
+            </div>
           </div>
 
           {/* Quick links */}

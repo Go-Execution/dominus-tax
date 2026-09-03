@@ -3,6 +3,9 @@ import {
   Mail,
   Clock,
   MapPin,
+  Instagram,
+  Facebook,
+  Linkedin,
 } from 'lucide-react';
 
 export default function Contact() {
@@ -91,6 +94,48 @@ export default function Contact() {
                 Serving Clients Nationwide
               </p>
             </div>
+          </div>
+        </div>
+
+        {/* Social Media Links */}
+        <div className="mt-12 text-center reveal">
+          <p className="font-montserrat text-xs uppercase tracking-[0.25em] text-dominus-gold/80 mb-5">
+            Follow &amp; Connect With Us
+          </p>
+          <div className="flex flex-wrap items-center justify-center gap-4">
+            <a
+              href="https://www.instagram.com/dominustaxconsultants"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2.5 px-6 py-3 rounded-xl bg-dominus-charcoal border border-dominus-gold/20 hover:border-dominus-gold/60 hover:shadow-gold-glow transition-all duration-300 group"
+            >
+              <Instagram className="w-5 h-5 text-dominus-gold group-hover:scale-110 transition-transform" />
+              <span className="font-montserrat text-xs font-semibold uppercase tracking-wider text-dominus-text-primary/90 group-hover:text-dominus-gold-light transition-colors">
+                Instagram
+              </span>
+            </a>
+            <a
+              href="https://www.facebook.com/share/1HozbqjgoQ/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2.5 px-6 py-3 rounded-xl bg-dominus-charcoal border border-dominus-gold/20 hover:border-dominus-gold/60 hover:shadow-gold-glow transition-all duration-300 group"
+            >
+              <Facebook className="w-5 h-5 text-dominus-gold group-hover:scale-110 transition-transform" />
+              <span className="font-montserrat text-xs font-semibold uppercase tracking-wider text-dominus-text-primary/90 group-hover:text-dominus-gold-light transition-colors">
+                Facebook
+              </span>
+            </a>
+            <a
+              href="https://www.linkedin.com/posts/dominustaxconsultants_dominustaxconsultants-taxpreparation-taxservices-activity-7499141526980132866-4-Cm?utm_source=share&utm_medium=member_desktop&rcm=ACoAAA-1A2MBoSEkpRCAhYIq5dsM-ctjB6dyMa4"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2.5 px-6 py-3 rounded-xl bg-dominus-charcoal border border-dominus-gold/20 hover:border-dominus-gold/60 hover:shadow-gold-glow transition-all duration-300 group"
+            >
+              <Linkedin className="w-5 h-5 text-dominus-gold group-hover:scale-110 transition-transform" />
+              <span className="font-montserrat text-xs font-semibold uppercase tracking-wider text-dominus-text-primary/90 group-hover:text-dominus-gold-light transition-colors">
+                LinkedIn
+              </span>
+            </a>
           </div>
         </div>
       </div>
