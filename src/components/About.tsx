@@ -1,4 +1,4 @@
-const ABOUT_IMAGE = '/owner.jpeg';
+const ABOUT_IMAGE = '/about-illustration.jpg';
 
 export default function About() {
   return (
@@ -6,14 +6,14 @@ export default function About() {
       <div className="absolute inset-0 gold-radial opacity-30" />
       <div className="relative max-w-7xl mx-auto px-5 lg:px-8">
         {/* Mobile Header (Eyebrow above photo) */}
-        <div className="text-center mb-8 lg:hidden reveal">
+        {/* <div className="text-center mb-8 lg:hidden reveal">
           <span className="ornament font-montserrat text-xs tracking-[0.3em] uppercase text-dominus-gold/70">
             Meet The Owner
           </span>
-        </div>
+        </div> */}
 
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-          {/* Left: Photo */}
+          {/* Left: Illustration */}
           <div className="reveal relative">
             <div className="relative mx-auto max-w-md lg:max-w-none">
               {/* Decorative frame */}
@@ -23,17 +23,19 @@ export default function About() {
               <div className="relative rounded-2xl overflow-hidden border border-dominus-gold/40 shadow-card">
                 <img
                   src={ABOUT_IMAGE}
-                  alt="Amanda D. Atchison, Owner of Dominus Tax Consultants"
+                  alt="Strategic Tax Planning and Legal Compliance Illustration"
                   className="w-full h-[500px] lg:h-[580px] object-cover"
                   loading="lazy"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-dominus-black via-transparent to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-dominus-black/90 via-transparent to-transparent" />
 
-                {/* Name plate */}
+                {/* Brand plate */}
                 <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-dominus-black/95 to-transparent text-center lg:text-left">
-                  <p className="font-script text-2xl text-dominus-gold-light mb-1">Amanda D. Atchison</p>
-                  <p className="font-montserrat text-xs tracking-[0.25em] uppercase text-dominus-text-primary/60">
-                    Owner &amp; Lead Consultant
+                  <p className="font-serif font-bold text-lg text-dominus-gold-light tracking-wide mb-1">
+                    Dominus Tax Consultants
+                  </p>
+                  <p className="font-montserrat text-xs tracking-[0.25em] uppercase text-dominus-text-primary/70">
+                    Strategy &bull; Wealth &bull; Legacy
                   </p>
                 </div>
               </div>
@@ -42,9 +44,9 @@ export default function About() {
 
           {/* Right: Content */}
           <div className="reveal">
-            <span className="hidden lg:inline-flex ornament font-montserrat text-xs tracking-[0.3em] uppercase text-dominus-gold/70">
+            {/* <span className="hidden lg:inline-flex ornament font-montserrat text-xs tracking-[0.3em] uppercase text-dominus-gold/70">
               Meet The Owner
-            </span>
+            </span> */}
             <h2 className="font-serif text-4xl lg:text-5xl font-bold mt-0 lg:mt-5 mb-6">
               <span className="text-dominus-text-primary">Empowering Your </span>
               <span className="gold-text">Financial Future</span>
