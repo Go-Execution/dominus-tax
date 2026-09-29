@@ -13,6 +13,8 @@ import Footer from '@/components/Footer';
 import TermsConditions from '@/components/TermsConditions';
 import FloatingForm from '@/components/FloatingForm';
 import useReveal from '@/hooks/useReveal';
+import BlogList from '@/components/BlogList';
+import BlogPost from '@/components/BlogPost';
 
 export default function App() {
   useReveal();
@@ -21,6 +23,8 @@ export default function App() {
     const hash = window.location.hash;
     if (hash === '#terms') return 'terms';
     if (hash === '#contact') return 'contact';
+    if (hash === '#blog') return 'blog';
+    if (hash.startsWith('#blog/')) return hash;
     return 'home';
   });
 
@@ -31,6 +35,10 @@ export default function App() {
         setPage('terms');
       } else if (hash === '#contact') {
         setPage('contact');
+      } else if (hash === '#blog') {
+        setPage('blog');
+      } else if (hash.startsWith('#blog/')) {
+        setPage(hash);
       } else {
         setPage('home');
       }
@@ -64,6 +72,37 @@ export default function App() {
         <main>
           <Contact />
           <Booking />
+        </main>
+        <Footer />
+        <FloatingForm />
+      </div>
+    );
+  }
+
+  const handleNavigate = (path: string) => {
+    window.location.hash = path;
+  };
+
+  if (page === 'blog') {
+    return (
+      <div className="min-h-screen bg-dominus-black text-dominus-text-primary">
+        <Navbar />
+        <main>
+          <BlogList onNavigate={handleNavigate} />
+        </main>
+        <Footer />
+        <FloatingForm />
+      </div>
+    );
+  }
+
+  if (page.startsWith('#blog/')) {
+    const blogId = page.replace('#blog/', '');
+    return (
+      <div className="min-h-screen bg-dominus-black text-dominus-text-primary">
+        <Navbar />
+        <main>
+          <BlogPost id={blogId} onNavigate={handleNavigate} />
         </main>
         <Footer />
         <FloatingForm />
