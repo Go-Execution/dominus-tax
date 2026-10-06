@@ -1,4 +1,4 @@
-import { Phone, Mail, Clock, MapPin, Instagram, Facebook, Linkedin } from 'lucide-react';
+import { Phone, Mail, Clock, MapPin, Instagram, Facebook, Linkedin, Printer } from 'lucide-react';
 import Logo from './Logo';
 
 const QUICK_LINKS = [
@@ -138,6 +138,10 @@ export default function Footer() {
                   <Mail className="w-4 h-4 text-dominus-gold flex-shrink-0 mt-0.5" />
                   info@dominustaxconsultants.com
                 </a>
+              </li>
+              <li className="flex items-center gap-3 text-dominus-text-primary/60 text-sm">
+                <Printer className="w-4 h-4 text-dominus-gold flex-shrink-0" />
+                <span>Fax: 432-257-3754</span>
               </li>
               <li className="flex items-start gap-3 text-dominus-text-primary/60 text-sm">
                 <Clock className="w-4 h-4 text-dominus-gold flex-shrink-0 mt-0.5" />

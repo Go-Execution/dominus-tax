@@ -6,6 +6,7 @@ import {
   Instagram,
   Facebook,
   Linkedin,
+  Printer,
 } from 'lucide-react';
 
 export default function Contact() {
@@ -46,6 +47,10 @@ export default function Contact() {
               <p className="font-serif text-lg text-dominus-text-primary group-hover:text-dominus-gold-light transition-colors">
                 432-256-3225
               </p>
+              <div className="flex items-center gap-2 mt-2 text-dominus-text-primary/65">
+                <Printer className="w-3.5 h-3.5 text-dominus-gold" />
+                <span className="font-montserrat text-xs">Fax: 432-257-3754</span>
+              </div>
             </div>
           </a>
 
