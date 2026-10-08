@@ -1,5 +1,5 @@
-import { ArrowRight, Zap } from 'lucide-react';
-import Logo from './Logo';
+import { ArrowRight, BriefcaseBusiness } from 'lucide-react';
+import { openLeadForm } from '@/lib/leadForms';
 
 const HERO_IMAGE = '/logo.jpeg';
 
@@ -38,7 +38,7 @@ export default function Hero() {
 
             {/* Headline */}
             <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold leading-[1.15] mb-6 animate-fade-in-up">
-              <span className="text-dominus-text-primary">Tax Preparation from someone who understrand the people who </span>
+              <span className="text-dominus-text-primary">Tax Preparation from someone who understands the people who </span>
               <span className="gold-text">Power the Permian</span>
             </h1>
 
@@ -52,11 +52,20 @@ export default function Hero() {
             {/* CTAs */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
               <button
+                type="button"
                 onClick={() => scrollTo('#booking')}
                 className="btn-gold px-8 py-4 rounded-xl text-sm sm:text-base flex items-center justify-center gap-2 group"
               >
                 Book Your Appointment
                 <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
+              </button>
+              <button
+                type="button"
+                onClick={() => openLeadForm('consultant')}
+                className="btn-gold-outline px-8 py-4 rounded-xl text-sm sm:text-base flex items-center justify-center gap-2 group"
+              >
+                Join Our Consultant Team
+                <BriefcaseBusiness className="w-5 h-5" aria-hidden="true" />
               </button>
             </div>
           </div>

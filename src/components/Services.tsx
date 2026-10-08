@@ -9,6 +9,7 @@ import {
   ArrowRight,
 } from 'lucide-react';
 import { SERVICES } from '@/data/content';
+import { openLeadForm } from '@/lib/leadForms';
 
 const ICONS: Record<string, React.ElementType> = {
   User,
@@ -21,16 +22,6 @@ const ICONS: Record<string, React.ElementType> = {
 };
 
 export default function Services() {
-  const scrollTo = (href: string) => {
-    const target = document.querySelector(href);
-    if (target) {
-      target.scrollIntoView({ behavior: 'smooth' });
-      window.history.pushState(null, '', href);
-    } else {
-      window.location.hash = href;
-    }
-  };
-
   return (
     <section id="services" className="relative py-24 lg:py-32 overflow-hidden">
       <div className="absolute inset-0 emerald-radial opacity-20" />
@@ -70,10 +61,15 @@ export default function Services() {
                   {service.description}
                 </p>
                 <button
-                  onClick={() => scrollTo('#contact')}
+                  type="button"
+                  onClick={() =>
+                    openLeadForm(
+                      service.title === 'Onboarding Tax Professionals' ? 'consultant' : 'tax-client',
+                    )
+                  }
                   className="flex items-center gap-2 text-dominus-gold/80 hover:text-dominus-gold text-sm font-montserrat font-medium transition-all group-hover:gap-3"
                 >
-                  Learn More
+                  {service.title === 'Onboarding Tax Professionals' ? 'Apply Now' : 'Get Started'}
                   <ArrowRight className="w-4 h-4" />
                 </button>
               </div>

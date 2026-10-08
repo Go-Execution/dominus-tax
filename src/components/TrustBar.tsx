@@ -1,11 +1,3 @@
-import { Sparkles, ShieldCheck, TrendingUp, Award } from 'lucide-react';
-
-const HIGHLIGHTS = [
-  { icon: ShieldCheck, text: 'Audit-Ready Protection' },
-  { icon: TrendingUp, text: 'Strategic Wealth Growth' },
-  { icon: Award, text: 'Nationwide Authority' },
-];
-
 export default function TrustBar() {
   return (
     <section className="relative py-12 lg:py-16 border-y border-dominus-gold/25 bg-gradient-to-b from-dominus-charcoal/90 via-dominus-charcoal-light to-dominus-charcoal/90 overflow-hidden">

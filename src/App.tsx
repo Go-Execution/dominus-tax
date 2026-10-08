@@ -15,6 +15,8 @@ import FloatingForm from '@/components/FloatingForm';
 import useReveal from '@/hooks/useReveal';
 import BlogList from '@/components/BlogList';
 import BlogPost from '@/components/BlogPost';
+import LeadPathways from '@/components/LeadPathways';
+import AdminDashboard from '@/components/AdminDashboard';
 
 export default function App() {
   useReveal();
@@ -24,6 +26,7 @@ export default function App() {
     if (hash === '#terms') return 'terms';
     if (hash === '#contact') return 'contact';
     if (hash === '#blog') return 'blog';
+    if (hash === '#admin') return 'admin';
     if (hash.startsWith('#blog/')) return hash;
     return 'home';
   });
@@ -37,6 +40,8 @@ export default function App() {
         setPage('contact');
       } else if (hash === '#blog') {
         setPage('blog');
+      } else if (hash === '#admin') {
+        setPage('admin');
       } else if (hash.startsWith('#blog/')) {
         setPage(hash);
       } else {
@@ -63,6 +68,10 @@ export default function App() {
         <FloatingForm />
       </div>
     );
+  }
+
+  if (page === 'admin') {
+    return <AdminDashboard />;
   }
 
   if (page === 'contact') {
@@ -116,6 +125,7 @@ export default function App() {
       <main>
         <Hero />
         <TrustBar />
+        <LeadPathways />
         <Services />
         <About />
         <TaxAdvance />

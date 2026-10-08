@@ -1,4 +1,4 @@
-import { ArrowRight, Calendar, User } from 'lucide-react';
+import { ArrowRight, Calendar } from 'lucide-react';
 import { blogs } from '@/data/blogs';
 
 export default function BlogList({ onNavigate }: { onNavigate: (path: string) => void }) {
