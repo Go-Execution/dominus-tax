@@ -12,7 +12,7 @@ export async function PATCH(request: Request) {
     await requireAdmin(request, runtime.supabase);
     const body = (await readLimitedJson(request)) as { stage?: unknown };
     const parts = new URL(request.url).pathname.split('/').filter(Boolean);
-    const submissionId = decodeURIComponent(parts.at(-2) || '');
+    const submissionId = decodeURIComponent(parts[parts.length - 2] || '');
     if (!submissionId) return jsonResponse({ error: 'Submission ID is required.' }, 400);
     const submission = await runtime.adminService.updateStage(submissionId, body.stage);
     return jsonResponse({ submission });
