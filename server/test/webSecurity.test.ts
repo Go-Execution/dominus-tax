@@ -1,7 +1,14 @@
 import assert from 'node:assert/strict';
+import { pbkdf2Sync } from 'node:crypto';
 import test from 'node:test';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { requireAdmin, requireCrmUser } from '../src/adminAuth.js';
+import {
+  createTemporaryAdminSession,
+  temporaryAdminCookie,
+  verifyTemporaryAdminPassword,
+  verifyTemporaryAdminSession,
+} from '../src/temporaryAdminAuth.js';
 import { requireWebhookSecret } from '../src/webhookAuth.js';
 
 test('webhook authentication fails closed when no secret is configured', () => {
@@ -87,4 +94,42 @@ test('CRM authorization returns the active role and blocks consultant access to 
   assert.equal(consultant.profile.role, 'consultant');
   await assert.rejects(requireAdmin(request, fakeAuthClient('consultant')), /Insufficient/);
   await assert.doesNotReject(requireAdmin(request, fakeAuthClient('admin')));
+});
+
+test('temporary admin password is hashed and issues an expiring signed cookie', async () => {
+  const previousEnabled = process.env.TEMP_ADMIN_AUTH_ENABLED;
+  const previousHash = process.env.TEMP_ADMIN_PASSWORD_HASH;
+  const previousSecret = process.env.TEMP_ADMIN_SESSION_SECRET;
+  const password = 'Temporary-Test!Password-2026';
+  const salt = Buffer.from('dominustest-salt');
+  const digest = pbkdf2Sync(password, salt, 210_000, 32, 'sha256');
+
+  process.env.TEMP_ADMIN_AUTH_ENABLED = 'true';
+  process.env.TEMP_ADMIN_PASSWORD_HASH = `pbkdf2-sha256$210000$${salt.toString('base64url')}$${digest.toString('base64url')}`;
+  process.env.TEMP_ADMIN_SESSION_SECRET = 'test-session-secret-that-is-at-least-forty-three-characters-long';
+
+  try {
+    assert.equal(verifyTemporaryAdminPassword(password), true);
+    assert.equal(verifyTemporaryAdminPassword('incorrect-password'), false);
+    const now = Date.now();
+    const token = createTemporaryAdminSession(now);
+    const cookie = temporaryAdminCookie(token);
+    assert.match(cookie, /HttpOnly/);
+    assert.match(cookie, /Secure/);
+    assert.match(cookie, /SameSite=Strict/);
+
+    const authenticatedRequest = new Request('https://example.test/api/admin/dashboard', {
+      headers: { cookie: cookie.split(';')[0] },
+    });
+    assert.equal(verifyTemporaryAdminSession(authenticatedRequest, now + 1_000), true);
+    await assert.doesNotReject(requireAdmin(authenticatedRequest, {} as SupabaseClient));
+    assert.equal(verifyTemporaryAdminSession(authenticatedRequest, now + 9 * 60 * 60 * 1000), false);
+  } finally {
+    if (previousEnabled === undefined) delete process.env.TEMP_ADMIN_AUTH_ENABLED;
+    else process.env.TEMP_ADMIN_AUTH_ENABLED = previousEnabled;
+    if (previousHash === undefined) delete process.env.TEMP_ADMIN_PASSWORD_HASH;
+    else process.env.TEMP_ADMIN_PASSWORD_HASH = previousHash;
+    if (previousSecret === undefined) delete process.env.TEMP_ADMIN_SESSION_SECRET;
+    else process.env.TEMP_ADMIN_SESSION_SECRET = previousSecret;
+  }
 });

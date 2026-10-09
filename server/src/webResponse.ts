@@ -1,5 +1,5 @@
 import { ZodError } from 'zod';
-import { HttpError } from './adminAuth.js';
+import { HttpError } from './httpError.js';
 
 export const MAX_JSON_BYTES = 256 * 1024;
 

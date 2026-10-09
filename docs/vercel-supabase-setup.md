@@ -93,6 +93,17 @@ Configure the variables separately for Production and Preview. Do not copy produ
 | `VITE_CLIENT_INTAKE_FORM_URL` | Build/browser | No | Client Jotform embed |
 | `VITE_CONSULTANT_ONBOARDING_FORM_URL` | Build/browser | No | Consultant Jotform embed |
 
+### Temporary password bridge
+
+Until the approved Supabase email account is provisioned, the dashboard can use a short-lived
+shared-password bridge. Set `VITE_TEMP_ADMIN_AUTH_ENABLED=true`,
+`TEMP_ADMIN_AUTH_ENABLED=true`, and store `TEMP_ADMIN_PASSWORD_HASH` plus
+`TEMP_ADMIN_SESSION_SECRET` as Vercel secrets. The password itself must never be committed or
+stored as an environment variable. Sessions are signed, `HttpOnly`, `Secure`, `SameSite=Strict`,
+and expire after eight hours.
+
+Disable and remove all four temporary variables when email authentication is activated.
+
 Never create a `VITE_SUPABASE_SECRET_KEY`, `VITE_SUPABASE_SERVICE_ROLE_KEY`, or `VITE_INTAKE_WEBHOOK_SECRET` variable.
 
 ## 6. Configure the intake sender

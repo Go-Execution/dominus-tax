@@ -10,10 +10,13 @@ import {
   Users,
   LogIn,
   LogOut,
+  LockKeyhole,
   Mail,
 } from 'lucide-react';
 import type { Session } from '@supabase/supabase-js';
 import { isLocalAdminBypass, isSupabaseConfigured, supabase } from '@/lib/supabase';
+
+const isTemporaryPasswordAuth = import.meta.env.VITE_TEMP_ADMIN_AUTH_ENABLED === 'true';
 
 type Journey = 'tax-client' | 'consultant';
 type SyncStatus = 'received' | 'synced' | 'failed';
@@ -155,6 +158,7 @@ export default function AdminDashboard() {
   const [identity, setIdentity] = useState<CrmIdentity | null>(null);
   const [authLoading, setAuthLoading] = useState(!isLocalAdminBypass);
   const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [authMessage, setAuthMessage] = useState<string | null>(null);
   const [data, setData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -163,6 +167,17 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     if (isLocalAdminBypass) return;
+    if (isTemporaryPasswordAuth) {
+      void fetch('/api/auth/me', { credentials: 'include' })
+        .then(async (response) => {
+          if (!response.ok) return null;
+          return (await response.json()) as { user: CrmIdentity };
+        })
+        .then((body) => setIdentity(body?.user || null))
+        .catch(() => setIdentity(null))
+        .finally(() => setAuthLoading(false));
+      return;
+    }
     if (!supabase) {
       setAuthLoading(false);
       return;
@@ -180,7 +195,7 @@ export default function AdminDashboard() {
   }, []);
 
   useEffect(() => {
-    if (isLocalAdminBypass || !session) return;
+    if (isLocalAdminBypass || isTemporaryPasswordAuth || !session) return;
     setAuthLoading(true);
     void fetch('/api/auth/me', {
       headers: { authorization: `Bearer ${session.access_token}` },
@@ -206,11 +221,12 @@ export default function AdminDashboard() {
   }, [session]);
 
   const loadDashboard = useCallback(async () => {
-    if (!isLocalAdminBypass && (!session || identity?.role !== 'admin')) return;
+    if (!isLocalAdminBypass && identity?.role !== 'admin') return;
     setLoading(true);
     setError(null);
     try {
       const response = await fetch('/api/admin/dashboard', {
+        credentials: 'include',
         headers: {
           accept: 'application/json',
           ...(session ? { authorization: `Bearer ${session.access_token}` } : {}),
@@ -249,6 +265,7 @@ export default function AdminDashboard() {
         `/api/admin/submissions/${encodeURIComponent(submission.id)}/stage`,
         {
           method: 'PATCH',
+          credentials: 'include',
           headers: {
             'content-type': 'application/json',
             ...(session ? { authorization: `Bearer ${session.access_token}` } : {}),
@@ -292,8 +309,37 @@ export default function AdminDashboard() {
     );
   };
 
+  const signInWithTemporaryPassword = async (event: React.FormEvent) => {
+    event.preventDefault();
+    setAuthMessage(null);
+    setAuthLoading(true);
+    try {
+      const response = await fetch('/api/auth/temporary-login', {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ password }),
+      });
+      const body = (await response.json().catch(() => null)) as
+        | { user?: CrmIdentity; error?: string }
+        | null;
+      if (!response.ok || !body?.user) throw new Error(body?.error || 'Login failed.');
+      setIdentity(body.user);
+      setPassword('');
+    } catch (loginError) {
+      setIdentity(null);
+      setAuthMessage(loginError instanceof Error ? loginError.message : 'Login failed.');
+    } finally {
+      setAuthLoading(false);
+    }
+  };
+
   const signOut = async () => {
     setIdentity(null);
+    if (isTemporaryPasswordAuth) {
+      await fetch('/api/auth/temporary-logout', { method: 'POST', credentials: 'include' });
+      return;
+    }
     if (supabase) await supabase.auth.signOut();
   };
 
@@ -305,7 +351,7 @@ export default function AdminDashboard() {
     );
   }
 
-  if (!isLocalAdminBypass && !session) {
+  if (!isLocalAdminBypass && !identity && (isTemporaryPasswordAuth || !session)) {
     return (
       <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-dominus-black px-5 text-dominus-text-primary">
         <div className="absolute inset-0 gold-radial opacity-60" />
@@ -327,31 +373,53 @@ export default function AdminDashboard() {
           </p>
           <h1 className="mt-2 font-serif text-4xl font-semibold">Dominus 360 CRM</h1>
           <p className="mt-3 text-sm leading-relaxed text-dominus-text-primary/50">
-            Enter an approved team email. Supabase will send a one-time secure sign-in link and
-            apply the account’s CRM role.
+            {isTemporaryPasswordAuth
+              ? 'Enter the temporary administrator password. The secure session expires automatically after eight hours.'
+              : 'Enter an approved team email. Supabase will send a one-time secure sign-in link and apply the account’s CRM role.'}
           </p>
-          <form onSubmit={sendMagicLink} className="mt-8 space-y-4">
+          <form
+            onSubmit={isTemporaryPasswordAuth ? signInWithTemporaryPassword : sendMagicLink}
+            className="mt-8 space-y-4"
+          >
             <label className="block">
               <span className="mb-2 block font-montserrat text-xs font-semibold uppercase tracking-wider text-dominus-text-primary/55">
-                Work email
+                {isTemporaryPasswordAuth ? 'Temporary password' : 'Work email'}
               </span>
               <span className="flex items-center gap-3 rounded-xl border border-dominus-gold/20 bg-dominus-black px-4 focus-within:border-dominus-gold/60">
-                <Mail className="h-4 w-4 text-dominus-gold/60" />
-                <input
-                  type="email"
-                  required
-                  value={email}
-                  onChange={(event) => setEmail(event.target.value)}
-                  placeholder="amanda@example.com"
-                  className="w-full bg-transparent py-3.5 text-sm outline-none placeholder:text-white/20"
-                />
+                {isTemporaryPasswordAuth ? (
+                  <>
+                    <LockKeyhole className="h-4 w-4 text-dominus-gold/60" />
+                    <input
+                      type="password"
+                      required
+                      minLength={12}
+                      autoComplete="current-password"
+                      value={password}
+                      onChange={(event) => setPassword(event.target.value)}
+                      placeholder="Enter temporary password"
+                      className="w-full bg-transparent py-3.5 text-sm outline-none placeholder:text-white/20"
+                    />
+                  </>
+                ) : (
+                  <>
+                    <Mail className="h-4 w-4 text-dominus-gold/60" />
+                    <input
+                      type="email"
+                      required
+                      value={email}
+                      onChange={(event) => setEmail(event.target.value)}
+                      placeholder="amanda@example.com"
+                      className="w-full bg-transparent py-3.5 text-sm outline-none placeholder:text-white/20"
+                    />
+                  </>
+                )}
               </span>
             </label>
             <button type="submit" className="btn-gold w-full rounded-xl px-5 py-3.5">
-              Email Secure Sign-In Link
+              {isTemporaryPasswordAuth ? 'Unlock CRM Dashboard' : 'Email Secure Sign-In Link'}
             </button>
           </form>
-          {!isSupabaseConfigured && (
+          {!isTemporaryPasswordAuth && !isSupabaseConfigured && (
             <p className="mt-4 rounded-lg border border-amber-300/20 bg-amber-300/10 px-4 py-3 text-xs text-amber-100">
               Supabase frontend variables must be configured before login can work.
             </p>
@@ -364,7 +432,7 @@ export default function AdminDashboard() {
     );
   }
 
-  if (!isLocalAdminBypass && session && !identity) {
+  if (!isTemporaryPasswordAuth && !isLocalAdminBypass && session && !identity) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-dominus-black px-5 text-dominus-text-primary">
         <div className="w-full max-w-lg rounded-3xl border border-red-400/20 bg-dominus-charcoal p-8 text-center shadow-card">

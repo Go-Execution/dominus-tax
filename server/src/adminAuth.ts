@@ -1,4 +1,6 @@
 import type { SupabaseClient, User } from '@supabase/supabase-js';
+import { HttpError } from './httpError.js';
+import { verifyTemporaryAdminSession } from './temporaryAdminAuth.js';
 
 export type CrmRole = 'admin' | 'consultant';
 
@@ -10,17 +12,8 @@ export interface CrmProfile {
 }
 
 export interface AuthenticatedCrmUser {
-  user: User;
+  user: Pick<User, 'id' | 'email'>;
   profile: CrmProfile;
-}
-
-export class HttpError extends Error {
-  constructor(
-    readonly status: number,
-    message: string,
-  ) {
-    super(message);
-  }
 }
 
 function bearerToken(request: Request) {
@@ -35,6 +28,19 @@ export async function requireCrmUser(
   supabase: SupabaseClient,
   allowedRoles: CrmRole[] = ['admin', 'consultant'],
 ): Promise<AuthenticatedCrmUser> {
+  if (verifyTemporaryAdminSession(request)) {
+    if (!allowedRoles.includes('admin')) throw new HttpError(403, 'Insufficient CRM permissions.');
+    return {
+      user: { id: 'temporary-admin' },
+      profile: {
+        userId: 'temporary-admin',
+        fullName: 'Temporary Administrator',
+        role: 'admin',
+        isActive: true,
+      },
+    };
+  }
+
   const token = bearerToken(request);
   const { data, error } = await supabase.auth.getUser(token);
   if (error || !data.user) throw new HttpError(401, 'Invalid or expired session.');
@@ -62,6 +68,9 @@ export async function requireCrmUser(
   };
 }
 
-export async function requireAdmin(request: Request, supabase: SupabaseClient): Promise<User> {
+export async function requireAdmin(
+  request: Request,
+  supabase: SupabaseClient,
+): Promise<AuthenticatedCrmUser['user']> {
   return (await requireCrmUser(request, supabase, ['admin'])).user;
 }

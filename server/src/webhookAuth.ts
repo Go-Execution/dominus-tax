@@ -1,5 +1,5 @@
 import { timingSafeEqual } from 'node:crypto';
-import { HttpError } from './adminAuth.js';
+import { HttpError } from './httpError.js';
 
 export function requireWebhookSecret(request: Request) {
   const expected = process.env.INTAKE_WEBHOOK_SECRET?.trim();
