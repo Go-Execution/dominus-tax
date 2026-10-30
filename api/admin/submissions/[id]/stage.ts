@@ -5,9 +5,11 @@ import {
   jsonResponse,
   readLimitedJson,
 } from '../../../../server/src/webResponse.js';
+import { requireSameOrigin } from '../../../../server/src/requestSecurity.js';
 
 export async function PATCH(request: Request) {
   try {
+    requireSameOrigin(request);
     const runtime = getProductionRuntime();
     await requireAdmin(request, runtime.supabase);
     const body = (await readLimitedJson(request)) as { stage?: unknown };

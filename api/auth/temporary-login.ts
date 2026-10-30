@@ -7,6 +7,7 @@ import {
 } from '../../server/src/temporaryAdminAuth.js';
 import { HttpError } from '../../server/src/httpError.js';
 import { errorResponse, jsonResponse, readLimitedJson } from '../../server/src/webResponse.js';
+import { requireSameOrigin } from '../../server/src/requestSecurity.js';
 
 const LoginBody = z.object({
   password: z.string().min(12).max(128),
@@ -18,13 +19,6 @@ const MAX_ATTEMPTS = 5;
 
 function clientKey(request: Request) {
   return (request.headers.get('x-forwarded-for') || 'unknown').split(',')[0].trim();
-}
-
-function requireSameOrigin(request: Request) {
-  const origin = request.headers.get('origin');
-  if (origin && origin !== new URL(request.url).origin) {
-    throw new HttpError(403, 'Cross-origin login is not allowed.');
-  }
 }
 
 function requireAttemptAvailable(request: Request) {

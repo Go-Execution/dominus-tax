@@ -92,6 +92,8 @@ export class SupabaseIntakeStore implements IntakeStore {
         status: input.status,
         external_contact_id: input.externalContactId || null,
         external_opportunity_id: input.externalOpportunityId || null,
+        crm_contact_id: input.externalContactId || null,
+        crm_opportunity_id: input.externalOpportunityId || null,
         updated_at: input.now,
       })
       .eq('id', input.id);

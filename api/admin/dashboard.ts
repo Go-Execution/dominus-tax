@@ -6,7 +6,7 @@ export async function GET(request: Request) {
   try {
     const runtime = getProductionRuntime();
     await requireAdmin(request, runtime.supabase);
-    return jsonResponse(await runtime.adminService.dashboard());
+    return jsonResponse(await runtime.crmAdminService.dashboard(new URL(request.url)));
   } catch (error) {
     return errorResponse(error);
   }

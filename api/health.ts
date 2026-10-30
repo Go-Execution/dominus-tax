@@ -5,6 +5,6 @@ export function GET() {
     ok: true,
     service: 'dominus-api',
     storage: 'supabase',
-    ghlMode: process.env.GHL_INTEGRATION_MODE || 'disabled',
+    integration: 'internal-crm',
   });
 }

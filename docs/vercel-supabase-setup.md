@@ -89,7 +89,6 @@ Configure the variables separately for Production and Preview. Do not copy produ
 | `SUPABASE_URL` | Functions | No | Server Supabase URL |
 | `SUPABASE_SECRET_KEY` | Functions | **Yes** | Server database access |
 | `INTAKE_WEBHOOK_SECRET` | Functions | **Yes** | Authenticates Jotform/automation intake calls |
-| `GHL_INTEGRATION_MODE` | Functions | No | Keep `disabled` until live adapter approval |
 | `VITE_CLIENT_INTAKE_FORM_URL` | Build/browser | No | Client Jotform embed |
 | `VITE_CONSULTANT_ONBOARDING_FORM_URL` | Build/browser | No | Consultant Jotform embed |
 
@@ -118,7 +117,21 @@ X-Dominus-Webhook-Secret: THE_SAME_SECRET_AS_VERCEL
 
 Jotform's native integration, Make, Zapier, or another trusted server-side automation must transform submissions into the documented intake contract. The secret header must be set by that trusted automation—not by browser JavaScript.
 
-Until the live GHL adapter is reviewed, `GHL_INTEGRATION_MODE` should remain `disabled`. Intakes will be recorded safely and surfaced as needing attention rather than falsely marked synced.
+The production intake adapter writes directly to the Dominus CRM tables. GoHighLevel is not used.
+
+### Direct Jotform webhook
+
+Both approved Jotforms can POST directly to:
+
+```text
+https://YOUR_DOMAIN/api/jotform?token=THE_SAME_VALUE_AS_INTAKE_WEBHOOK_SECRET
+```
+
+The adapter recognizes form IDs `262376514662461` (tax client) and `262339213591053`
+(consultant), maps their current name/email/phone fields, creates or updates the CRM contact, and
+creates one open opportunity in the correct pipeline. Repeated submission IDs are idempotent.
+
+Treat the complete webhook URL as a credential. Do not publish it or place it in browser code.
 
 ## 7. Pre-deployment verification
 

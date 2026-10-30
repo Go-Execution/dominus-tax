@@ -60,7 +60,7 @@ export class IntakeService {
       await this.repository.addEvent({
         id: randomUUID(),
         submissionId: submission.id,
-        eventType: 'ghl.sync',
+        eventType: 'crm.sync',
         status: 'success',
         now: syncedAt,
       });
@@ -70,7 +70,7 @@ export class IntakeService {
       await this.repository.addEvent({
         id: randomUUID(),
         submissionId: submission.id,
-        eventType: 'ghl.sync',
+        eventType: 'crm.sync',
         status: 'failed',
         message: error instanceof Error ? error.message.slice(0, 500) : 'Unknown integration error',
         now: failedAt,

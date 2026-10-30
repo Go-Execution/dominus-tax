@@ -1,6 +1,7 @@
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 import { AdminService } from './adminService.js';
-import { DisabledGhlAdapter, MockGhlAdapter } from './ghl.js';
+import { CrmAdminService } from './crmAdminService.js';
+import { InternalCrmAdapter } from './internalCrm.js';
 import { IntakeService } from './intakeService.js';
 import { SupabaseIntakeStore } from './supabaseStore.js';
 
@@ -8,6 +9,7 @@ export interface ProductionRuntime {
   supabase: SupabaseClient;
   intakeService: IntakeService;
   adminService: AdminService;
+  crmAdminService: CrmAdminService;
 }
 
 let runtime: ProductionRuntime | null = null;
@@ -30,14 +32,13 @@ export function getProductionRuntime(): ProductionRuntime {
     auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false },
   });
   const store = new SupabaseIntakeStore(supabase);
-  const ghl = process.env.GHL_INTEGRATION_MODE === 'mock'
-    ? new MockGhlAdapter()
-    : new DisabledGhlAdapter();
+  const crm = new InternalCrmAdapter(supabase);
 
   runtime = {
     supabase,
-    intakeService: new IntakeService(store, ghl),
+    intakeService: new IntakeService(store, crm),
     adminService: new AdminService(store),
+    crmAdminService: new CrmAdminService(supabase),
   };
   return runtime;
 }
