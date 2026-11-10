@@ -1,5 +1,6 @@
 import { Phone, Mail, Clock, MapPin, Instagram, Facebook, Linkedin, Printer } from 'lucide-react';
 import Logo from './Logo';
+import { navigateTo } from '@/lib/navigation';
 
 const QUICK_LINKS = [
   { label: 'Home', href: '#home' },
@@ -19,13 +20,7 @@ const SERVICE_LINKS = [
 
 export default function Footer() {
   const handleNav = (href: string) => {
-    const target = document.querySelector(href);
-    if (target) {
-      target.scrollIntoView({ behavior: 'smooth' });
-      window.history.pushState(null, '', href);
-    } else {
-      window.location.hash = href;
-    }
+    navigateTo(href);
   };
 
   return (
@@ -41,7 +36,7 @@ export default function Footer() {
               The Power Behind Your Financial Success. Premium tax preparation and consulting
               serving clients nationwide.
             </p>
-            <p className="font-script text-xl text-dominus-gold-light mb-6">
+            <p className="font-serif text-xl italic text-dominus-gold-light mb-6">
               Prepare Today. Prosper Tomorrow.
             </p>
 
@@ -79,9 +74,9 @@ export default function Footer() {
 
           {/* Quick links */}
           <div>
-            <h4 className="font-montserrat text-sm font-bold uppercase tracking-wider text-dominus-gold mb-5">
+            <h2 className="font-montserrat text-sm font-bold uppercase tracking-wider text-dominus-gold mb-5">
               Quick Links
-            </h4>
+            </h2>
             <ul className="space-y-3">
               {QUICK_LINKS.map((link) => (
                 <li key={link.href}>
@@ -98,9 +93,9 @@ export default function Footer() {
 
           {/* Services */}
           <div>
-            <h4 className="font-montserrat text-sm font-bold uppercase tracking-wider text-dominus-gold mb-5">
+            <h2 className="font-montserrat text-sm font-bold uppercase tracking-wider text-dominus-gold mb-5">
               Services
-            </h4>
+            </h2>
             <ul className="space-y-3">
               {SERVICE_LINKS.map((s) => (
                 <li key={s}>
@@ -117,9 +112,9 @@ export default function Footer() {
 
           {/* Contact */}
           <div>
-            <h4 className="font-montserrat text-sm font-bold uppercase tracking-wider text-dominus-gold mb-5">
+            <h2 className="font-montserrat text-sm font-bold uppercase tracking-wider text-dominus-gold mb-5">
               Contact
-            </h4>
+            </h2>
             <ul className="space-y-4">
               <li>
                 <a

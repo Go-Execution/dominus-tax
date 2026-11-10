@@ -96,9 +96,9 @@ export default function TaxAdvance() {
                       <item.icon className="w-5 h-5 text-dominus-gold" />
                     </div>
                     <div>
-                      <h4 className="font-montserrat font-semibold text-dominus-text-primary text-sm mb-1">
+                      <h3 className="font-montserrat font-semibold text-dominus-text-primary text-sm mb-1">
                         {item.title}
-                      </h4>
+                      </h3>
                       <p className="text-dominus-text-primary/55 text-sm leading-relaxed">
                         {item.text}
                       </p>

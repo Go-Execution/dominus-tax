@@ -131,6 +131,10 @@ The adapter recognizes form IDs `262376514662461` (tax client) and `262339213591
 (consultant), maps their current name/email/phone fields, creates or updates the CRM contact, and
 creates one open opportunity in the correct pipeline. Repeated submission IDs are idempotent.
 
+Automation tools that support custom headers should instead send
+`x-dominus-webhook-secret: THE_SAME_VALUE_AS_INTAKE_WEBHOOK_SECRET` to `/api/jotform` so the
+credential is not placed in the URL. Direct Jotform webhooks may continue using the token URL.
+
 Treat the complete webhook URL as a credential. Do not publish it or place it in browser code.
 
 ## 7. Pre-deployment verification

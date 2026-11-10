@@ -1,4 +1,4 @@
-const ABOUT_IMAGE = '/about-illustration.jpg';
+const ABOUT_IMAGE = '/about-illustration.webp';
 
 export default function About() {
   return (
@@ -26,6 +26,8 @@ export default function About() {
                   alt="Strategic Tax Planning and Legal Compliance Illustration"
                   className="w-full h-[500px] lg:h-[580px] object-cover"
                   loading="lazy"
+                  width={896}
+                  height={1200}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-dominus-black/90 via-transparent to-transparent" />
 

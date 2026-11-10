@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { lazy, Suspense, useState, useEffect, type ReactNode } from 'react';
 import Navbar from '@/components/Navbar';
 import Hero from '@/components/Hero';
 import TrustBar from '@/components/TrustBar';
@@ -13,116 +13,98 @@ import Footer from '@/components/Footer';
 import TermsConditions from '@/components/TermsConditions';
 import FloatingForm from '@/components/FloatingForm';
 import useReveal from '@/hooks/useReveal';
-import BlogList from '@/components/BlogList';
-import BlogPost from '@/components/BlogPost';
 import LeadPathways from '@/components/LeadPathways';
-import AdminDashboard from '@/components/AdminDashboard';
+import { isHomeAnchor, navigateTo, pageFromHash } from '@/lib/navigation';
+
+const AdminDashboard = lazy(() => import('@/components/AdminDashboard'));
+const BlogList = lazy(() => import('@/components/BlogList'));
+const BlogPost = lazy(() => import('@/components/BlogPost'));
+
+function PageLoading() {
+  return <div className="flex min-h-[60vh] items-center justify-center text-sm text-dominus-gold" role="status">Loading…</div>;
+}
+
+function WebsiteShell({ children }: { children: ReactNode }) {
+  return (
+    <div className="min-h-screen bg-dominus-black text-dominus-text-primary">
+      <a
+        href="#main-content"
+        className="fixed left-4 top-3 z-[200] -translate-y-20 rounded-lg bg-dominus-gold px-4 py-2 font-semibold text-dominus-black transition-transform focus:translate-y-0"
+      >
+        Skip to main content
+      </a>
+      <Navbar />
+      <main id="main-content" tabIndex={-1}>{children}</main>
+      <Footer />
+      <FloatingForm />
+    </div>
+  );
+}
 
 export default function App() {
   useReveal();
 
-  const [page, setPage] = useState(() => {
-    const hash = window.location.hash;
-    if (hash === '#terms') return 'terms';
-    if (hash === '#contact') return 'contact';
-    if (hash === '#blog') return 'blog';
-    if (hash === '#admin') return 'admin';
-    if (hash.startsWith('#blog/')) return hash;
-    return 'home';
-  });
+  const [page, setPage] = useState(() => pageFromHash(window.location.hash));
 
   useEffect(() => {
     const onHashChange = () => {
-      const hash = window.location.hash;
-      if (hash === '#terms') {
-        setPage('terms');
-      } else if (hash === '#contact') {
-        setPage('contact');
-      } else if (hash === '#blog') {
-        setPage('blog');
-      } else if (hash === '#admin') {
-        setPage('admin');
-      } else if (hash.startsWith('#blog/')) {
-        setPage(hash);
-      } else {
-        setPage('home');
-      }
+      setPage(pageFromHash(window.location.hash));
     };
     window.addEventListener('hashchange', onHashChange);
     return () => window.removeEventListener('hashchange', onHashChange);
   }, []);
 
-  // Scroll to top when changing routing pages
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'instant' });
+    const hash = window.location.hash;
+    if (page === 'home' && isHomeAnchor(hash)) {
+      const frame = window.requestAnimationFrame(() => {
+        document.querySelector(hash)?.scrollIntoView({ behavior: 'auto', block: 'start' });
+      });
+      return () => window.cancelAnimationFrame(frame);
+    }
+    window.scrollTo({ top: 0, behavior: 'auto' });
+  }, [page]);
+
+  useEffect(() => {
+    const title = page === 'admin'
+      ? 'Dominus 360 CRM | Dominus Tax Consultants'
+      : page === 'blog' || page.startsWith('#blog/')
+        ? 'Tax Resources | Dominus Tax Consultants'
+        : page === 'contact'
+          ? 'Contact Dominus Tax Consultants'
+          : page === 'terms'
+            ? 'Terms & Conditions | Dominus Tax Consultants'
+            : 'Dominus Tax Consultants | The Power Behind Your Financial Success';
+    document.title = title;
   }, [page]);
 
   if (page === 'terms') {
-    return (
-      <div className="min-h-screen bg-dominus-black text-dominus-text-primary">
-        <Navbar />
-        <main>
-          <TermsConditions />
-        </main>
-        <Footer />
-        <FloatingForm />
-      </div>
-    );
+    return <WebsiteShell><TermsConditions /></WebsiteShell>;
   }
 
   if (page === 'admin') {
-    return <AdminDashboard />;
+    return <Suspense fallback={<PageLoading />}><AdminDashboard /></Suspense>;
   }
 
   if (page === 'contact') {
-    return (
-      <div className="min-h-screen bg-dominus-black text-dominus-text-primary">
-        <Navbar />
-        <main>
-          <Contact />
-          <Booking />
-        </main>
-        <Footer />
-        <FloatingForm />
-      </div>
-    );
+    return <WebsiteShell><Contact /><Booking /></WebsiteShell>;
   }
 
   const handleNavigate = (path: string) => {
-    window.location.hash = path;
+    navigateTo(path);
   };
 
   if (page === 'blog') {
-    return (
-      <div className="min-h-screen bg-dominus-black text-dominus-text-primary">
-        <Navbar />
-        <main>
-          <BlogList onNavigate={handleNavigate} />
-        </main>
-        <Footer />
-        <FloatingForm />
-      </div>
-    );
+    return <WebsiteShell><Suspense fallback={<PageLoading />}><BlogList onNavigate={handleNavigate} /></Suspense></WebsiteShell>;
   }
 
   if (page.startsWith('#blog/')) {
     const blogId = page.replace('#blog/', '');
-    return (
-      <div className="min-h-screen bg-dominus-black text-dominus-text-primary">
-        <Navbar />
-        <main>
-          <BlogPost id={blogId} onNavigate={handleNavigate} />
-        </main>
-        <Footer />
-        <FloatingForm />
-      </div>
-    );
+    return <WebsiteShell><Suspense fallback={<PageLoading />}><BlogPost id={blogId} onNavigate={handleNavigate} /></Suspense></WebsiteShell>;
   }
 
   return (
-    <div className="min-h-screen bg-dominus-black text-dominus-text-primary">
-      <Navbar />
-      <main>
+    <WebsiteShell>
         <Hero />
         <TrustBar />
         <LeadPathways />
@@ -132,9 +114,6 @@ export default function App() {
         <WhyChoose />
         <Booking />
         <Testimonials />
-      </main>
-      <Footer />
-      <FloatingForm />
-    </div>
+    </WebsiteShell>
   );
 }

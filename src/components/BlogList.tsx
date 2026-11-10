@@ -28,6 +28,9 @@ export default function BlogList({ onNavigate }: { onNavigate: (path: string) =>
                   src={blog.image} 
                   alt={blog.title} 
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  loading="lazy"
+                  width={1672}
+                  height={941}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-dominus-black to-transparent opacity-80" />
               </div>
@@ -37,9 +40,9 @@ export default function BlogList({ onNavigate }: { onNavigate: (path: string) =>
                   <span className="flex items-center gap-1"><Calendar className="w-3 h-3" /> {blog.date}</span>
                 </div>
                 
-                <h3 className="text-xl font-serif font-semibold text-dominus-text-primary mb-3 group-hover:text-dominus-gold transition-colors line-clamp-2">
+                <h2 className="text-xl font-serif font-semibold text-dominus-text-primary mb-3 group-hover:text-dominus-gold transition-colors line-clamp-2">
                   {blog.title}
-                </h3>
+                </h2>
                 
                 <p className="text-dominus-text-secondary text-sm font-montserrat mb-6 line-clamp-3 flex-grow">
                   {blog.excerpt}

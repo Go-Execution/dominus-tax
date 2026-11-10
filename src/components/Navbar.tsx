@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Menu, X, Phone, Instagram, Facebook, Linkedin } from 'lucide-react';
 import Logo from './Logo';
+import { navigateTo } from '@/lib/navigation';
 
 const NAV_LINKS = [
   { label: 'Home', href: '#home' },
@@ -22,14 +23,22 @@ export default function Navbar() {
 
   const handleNav = (href: string) => {
     setOpen(false);
-    const target = document.querySelector(href);
-    if (target) {
-      target.scrollIntoView({ behavior: 'smooth' });
-      window.history.pushState(null, '', href);
-    } else {
-      window.location.hash = href;
-    }
+    navigateTo(href);
   };
+
+  useEffect(() => {
+    if (!open) return;
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setOpen(false);
+    };
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    window.addEventListener('keydown', closeOnEscape);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener('keydown', closeOnEscape);
+    };
+  }, [open]);
 
   return (
     <>
@@ -41,7 +50,7 @@ export default function Navbar() {
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
-          <button onClick={() => handleNav('#home')} className="transition-transform hover:scale-105 flex items-center">
+          <button onClick={() => handleNav('#home')} className="transition-transform hover:scale-105 flex items-center" aria-label="Go to homepage">
             <Logo size="xl" />
           </button>
 
@@ -77,7 +86,9 @@ export default function Navbar() {
           <button
             onClick={() => setOpen(!open)}
             className="lg:hidden text-dominus-gold p-2 focus:outline-none"
-            aria-label="Toggle menu"
+            aria-label={open ? 'Close navigation menu' : 'Open navigation menu'}
+            aria-expanded={open}
+            aria-controls="mobile-navigation"
           >
             {open ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
@@ -86,12 +97,14 @@ export default function Navbar() {
 
       {/* Mobile menu */}
       <div
+        id="mobile-navigation"
         className={`fixed inset-0 z-40 lg:hidden transition-all duration-500 ${
           open ? 'opacity-100 visible' : 'opacity-0 invisible'
         }`}
+        aria-hidden={!open}
       >
-        <div className="absolute inset-0 bg-dominus-black/95 backdrop-blur-xl" onClick={() => setOpen(false)} />
-        <nav className="relative flex flex-col items-center justify-center h-full gap-8">
+        <div className="absolute inset-0 bg-dominus-black backdrop-blur-xl" onClick={() => setOpen(false)} />
+        <nav className="relative flex flex-col items-center justify-center h-full gap-8" aria-label="Mobile navigation">
           {NAV_LINKS.map((link, i) => (
             <button
               key={link.href}

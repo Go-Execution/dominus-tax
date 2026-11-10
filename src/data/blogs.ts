@@ -13,7 +13,7 @@ export const blogs: BlogPost[] = [
     id: 'tax-preparation-permian-basin',
     title: 'Tax Preparation in the Permian Basin: A Complete Guide',
     excerpt: 'For individuals and families throughout the Permian Basin, having an organized tax preparation process can make filing more efficient and help you understand your overall financial picture.',
-    image: '/blog-1.png',
+    image: '/blog-1.webp',
     date: 'Sep 29, 2026',
     author: 'Dominus Tax Consultants',
     content: `
@@ -80,7 +80,7 @@ export const blogs: BlogPost[] = [
     id: 'individual-tax-preparation-guide',
     title: 'Individual Tax Preparation: How to Prepare for Tax Season',
     excerpt: 'Preparing an individual tax return does not have to become a stressful annual event. With the right records and preparation process, taxpayers can make filing easier.',
-    image: '/blog-2.png',
+    image: '/blog-2.webp',
     date: 'Sep 25, 2026',
     author: 'Dominus Tax Consultants',
     content: `
@@ -163,7 +163,7 @@ export const blogs: BlogPost[] = [
     id: 'small-business-tax-preparation-mistakes',
     title: 'Small Business Tax Preparation: 7 Common Mistakes to Avoid',
     excerpt: 'Running a small business requires attention to customers, employees, operations, cash flow, and finances. Avoid these common tax preparation mistakes.',
-    image: '/blog-3.png',
+    image: '/blog-3.webp',
     date: 'Sep 21, 2026',
     author: 'Dominus Tax Consultants',
     content: `
@@ -228,7 +228,7 @@ export const blogs: BlogPost[] = [
     id: 'tax-planning-vs-preparation',
     title: "Tax Planning vs. Tax Preparation: What's the Difference?",
     excerpt: 'Tax planning and tax preparation are often used interchangeably, but they serve different purposes. Understanding the difference can help take a more organized approach.',
-    image: '/blog-4.png',
+    image: '/blog-4.webp',
     date: 'Sep 15, 2026',
     author: 'Dominus Tax Consultants',
     content: `
@@ -294,7 +294,7 @@ export const blogs: BlogPost[] = [
     id: 'tax-tips-oilfield-energy-workers',
     title: 'Tax Tips for Oilfield and Energy Workers in the Permian Basin',
     excerpt: 'Employees, contractors, service providers, and business owners in the energy sector can have very different tax situations depending on how they earn income.',
-    image: '/blog-5.png',
+    image: '/blog-5.webp',
     date: 'Sep 10, 2026',
     author: 'Dominus Tax Consultants',
     content: `

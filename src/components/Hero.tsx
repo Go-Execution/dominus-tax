@@ -1,8 +1,6 @@
 import { ArrowRight, BriefcaseBusiness } from 'lucide-react';
 import { openLeadForm } from '@/lib/leadForms';
 
-const HERO_IMAGE = '/logo.jpeg';
-
 export default function Hero() {
   const scrollTo = (href: string) => {
     const target = document.querySelector(href);
@@ -80,10 +78,14 @@ export default function Hero() {
               {/* Photo container */}
               <div className="relative rounded-3xl overflow-hidden border-2 border-dominus-gold/40 shadow-2xl p-4 bg-dominus-charcoal-light/50 flex items-center justify-center">
                 <img
-                  src={HERO_IMAGE}
+                  src="/logo-768.webp"
+                  srcSet="/logo-768.webp 768w, /logo.webp 1536w"
+                  sizes="(max-width: 1024px) 92vw, 50vw"
                   alt="Dominus Tax Consultants Logo"
                   className="w-full h-auto max-h-[500px] object-contain rounded-2xl"
                   loading="eager"
+                  width={1536}
+                  height={1024}
                 />
               </div>
 

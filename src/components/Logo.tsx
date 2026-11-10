@@ -14,10 +14,12 @@ export default function Logo({ size = 'md', className = '' }: LogoProps) {
   return (
     <div className={`flex items-center ${className}`}>
       <img
-        src="/logo.jpeg"
+        src="/logo-320.webp"
         alt="Dominus Tax Consultants Logo"
         className={`w-auto object-contain flex-shrink-0 ${sizeClasses[size]}`}
         loading="eager"
+        width={320}
+        height={213}
       />
     </div>
   );

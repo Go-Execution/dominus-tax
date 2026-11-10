@@ -32,16 +32,20 @@ export default function FloatingForm() {
   const [isOpen, setIsOpen] = useState(false);
   const [activeJourney, setActiveJourney] = useState<LeadJourney>('tax-client');
   const activeForm = LEAD_FORMS[activeJourney];
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const previousFocusRef = useRef<HTMLElement | null>(null);
 
   // Prevent scrolling when modal is open
   useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
+    if (!isOpen) return;
+    const previousOverflow = document.body.style.overflow;
+    previousFocusRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    document.body.style.overflow = 'hidden';
+    closeButtonRef.current?.focus();
     return () => {
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = previousOverflow;
+      previousFocusRef.current?.focus();
     };
   }, [isOpen]);
 
@@ -68,11 +72,28 @@ export default function FloatingForm() {
 
   useEffect(() => {
     if (!isOpen) return;
-    const closeOnEscape = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') setIsOpen(false);
+    const handleDialogKeys = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setIsOpen(false);
+        return;
+      }
+      if (event.key !== 'Tab' || !dialogRef.current) return;
+      const focusable = Array.from(dialogRef.current.querySelectorAll<HTMLElement>(
+        'button:not([disabled]), a[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+      )).filter((element) => !element.hasAttribute('aria-hidden'));
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (!first || !last) return;
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
     };
-    window.addEventListener('keydown', closeOnEscape);
-    return () => window.removeEventListener('keydown', closeOnEscape);
+    window.addEventListener('keydown', handleDialogKeys);
+    return () => window.removeEventListener('keydown', handleDialogKeys);
   }, [isOpen]);
 
   return (
@@ -84,12 +105,14 @@ export default function FloatingForm() {
           setActiveJourney('tax-client');
           setIsOpen(true);
         }}
-        className="fixed right-0 top-1/2 -translate-y-1/2 bg-dominus-gold text-dominus-black px-3 py-5 rounded-l-xl shadow-gold-glow z-40 flex flex-col items-center gap-3 hover:bg-dominus-gold-light transition-colors group border-y border-l border-dominus-gold/50"
-        aria-label="Open Dominus intake forms"
+        className="fixed bottom-4 right-4 z-30 flex items-center gap-2 rounded-full border border-dominus-gold/50 bg-dominus-gold px-4 py-3 text-dominus-black shadow-gold-glow transition-colors hover:bg-dominus-gold-light sm:bottom-auto sm:right-0 sm:top-1/2 sm:-translate-y-1/2 sm:flex-col sm:gap-3 sm:rounded-l-xl sm:rounded-r-none sm:border-r-0 sm:px-3 sm:py-5"
+        aria-label="Start — open Dominus intake forms"
       >
         <FileText className="w-5 h-5 flex-shrink-0" />
-        <span 
-          className="font-montserrat font-bold tracking-widest uppercase flex items-center whitespace-nowrap"
+        <span className="font-montserrat text-xs font-bold uppercase tracking-widest sm:hidden">Start</span>
+        <span
+          className="hidden font-montserrat font-bold tracking-widest uppercase whitespace-nowrap sm:flex"
+          aria-hidden="true"
           style={{ writingMode: 'vertical-rl', textOrientation: 'mixed', transform: 'rotate(180deg)' }}
         >
           Start Here
@@ -105,20 +128,23 @@ export default function FloatingForm() {
           if (event.target === event.currentTarget) setIsOpen(false);
         }}
         role="presentation"
+        aria-hidden={!isOpen}
       >
         {/* Modal Content */}
-        <div 
+        <div
+          ref={dialogRef}
           className={`relative w-full sm:max-w-5xl h-[100dvh] sm:h-auto sm:max-h-[90vh] bg-dominus-charcoal-light sm:bg-gradient-to-br from-dominus-charcoal-light to-dominus-charcoal sm:rounded-3xl sm:border border-dominus-gold/30 shadow-card flex flex-col overflow-hidden transition-transform duration-300 delay-75 ${
             isOpen ? 'scale-100 translate-y-0' : 'scale-95 translate-y-4'
           }`}
           role="dialog"
           aria-modal="true"
-          aria-label={activeForm.label}
+          aria-labelledby="lead-form-title"
         >
+            <h2 id="lead-form-title" className="sr-only">{activeForm.label}</h2>
 
             {/* Header & Tabs */}
             <div className="flex items-center justify-between border-b border-dominus-gold/20 flex-shrink-0 bg-dominus-charcoal px-2 lg:px-6">
-              <div className="flex flex-1">
+              <div className="flex flex-1" role="tablist" aria-label="Choose an intake form">
                 {JOURNEYS.map(([journey, form]) => (
                   <button
                     key={journey}
@@ -130,6 +156,8 @@ export default function FloatingForm() {
                         : 'text-dominus-text-primary/50 hover:text-dominus-text-primary/80'
                     }`}
                     aria-selected={activeJourney === journey}
+                    aria-controls="lead-form-panel"
+                    tabIndex={activeJourney === journey ? 0 : -1}
                     role="tab"
                   >
                     <span className="hidden sm:inline">{form.label}</span>
@@ -143,6 +171,7 @@ export default function FloatingForm() {
               
               {/* Close button */}
               <button
+                ref={closeButtonRef}
                 type="button"
                 onClick={() => setIsOpen(false)}
                 className="ml-2 w-10 h-10 rounded-full flex items-center justify-center text-dominus-gold hover:text-dominus-gold-light hover:bg-dominus-black/50 transition-colors"
@@ -153,7 +182,7 @@ export default function FloatingForm() {
             </div>
 
             {/* Form container - Scrollable */}
-            <div className="flex-1 overflow-y-auto p-0 sm:p-4 lg:p-8 bg-white/5 sm:bg-transparent">
+            <div id="lead-form-panel" role="tabpanel" className="flex-1 overflow-y-auto bg-white p-0 sm:p-4 lg:p-8">
               {isOpen && <JotFormEmbed key={activeJourney} src={activeForm.formSrc} />}
             </div>
           </div>

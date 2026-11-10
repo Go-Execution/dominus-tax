@@ -1,8 +1,9 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { mapJotformPayload } from '../../api/jotform.js';
+import { mapJotformPayload, POST as receiveJotform } from '../../api/jotform.js';
 import { opportunityUpdateSchema } from '../src/crmAdminService.js';
 import { requireSameOrigin } from '../src/requestSecurity.js';
+import { isHomeAnchor, pageFromHash } from '../../src/lib/navigation.js';
 
 test('maps the approved tax-client Jotform fields into the intake contract', () => {
   const form = new FormData();
@@ -43,4 +44,31 @@ test('CRM updates require a valid field and same-origin mutations', () => {
     () => requireSameOrigin(new Request('https://dominus.test/api/admin', { headers: { origin: 'https://attacker.test' } })),
     /Cross-origin/,
   );
+});
+
+test('site hashes route reliably and preserve homepage section anchors', () => {
+  assert.equal(pageFromHash('#admin'), 'admin');
+  assert.equal(pageFromHash('#blog/example'), '#blog/example');
+  assert.equal(pageFromHash('#services'), 'home');
+  assert.equal(isHomeAnchor('#services'), true);
+  assert.equal(isHomeAnchor('#contact'), false);
+});
+
+test('Jotform webhook rejects unsupported content before parsing a payload', async () => {
+  const previous = process.env.INTAKE_WEBHOOK_SECRET;
+  process.env.INTAKE_WEBHOOK_SECRET = 'test-jotform-secret';
+  try {
+    const response = await receiveJotform(new Request('https://dominus.test/api/jotform', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        'x-dominus-webhook-secret': 'test-jotform-secret',
+      },
+      body: '{}',
+    }));
+    assert.equal(response.status, 415);
+  } finally {
+    if (previous === undefined) delete process.env.INTAKE_WEBHOOK_SECRET;
+    else process.env.INTAKE_WEBHOOK_SECRET = previous;
+  }
 });

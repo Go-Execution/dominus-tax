@@ -1,34 +1,10 @@
-import { useEffect } from 'react';
 import { Calendar, Clock, ShieldCheck, ArrowRight, Sparkles, CheckCircle2 } from 'lucide-react';
 
-declare global {
-  interface Window {
-    Calendly?: {
-      initPopupWidget: (options: { url: string }) => void;
-    };
-  }
-}
-
-const CALENDLY_POPUP_URL = 'https://calendly.com/dominustaxconsultantsllc/30min?hide_gdpr_banner=1&background_color=121212&text_color=f5f5f5&primary_color=c9a227';
+const CALENDLY_URL = 'https://calendly.com/dominustaxconsultantsllc/30min';
 
 export default function Booking() {
-  useEffect(() => {
-    // Inject Calendly external script if not already present
-    const existingScript = document.querySelector('script[src="https://assets.calendly.com/assets/external/widget.js"]');
-    if (!existingScript) {
-      const script = document.createElement('script');
-      script.src = 'https://assets.calendly.com/assets/external/widget.js';
-      script.async = true;
-      document.body.appendChild(script);
-    }
-  }, []);
-
   const handleOpenCalendly = () => {
-    if (window.Calendly) {
-      window.Calendly.initPopupWidget({ url: CALENDLY_POPUP_URL });
-    } else {
-      window.open('https://calendly.com/dominustaxconsultantsllc/30min', '_blank', 'noopener,noreferrer');
-    }
+    window.open(CALENDLY_URL, '_blank', 'noopener,noreferrer');
   };
 
   return (

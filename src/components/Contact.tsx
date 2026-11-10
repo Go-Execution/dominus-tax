@@ -21,10 +21,10 @@ export default function Contact() {
           <span className="ornament font-montserrat text-xs tracking-[0.3em] uppercase text-dominus-gold/70">
             Get In Touch
           </span>
-          <h2 className="font-serif text-4xl lg:text-5xl font-bold mt-5 mb-4">
+          <h1 className="font-serif text-4xl lg:text-5xl font-bold mt-5 mb-4">
             <span className="text-dominus-text-primary">Contact </span>
             <span className="gold-text">Us</span>
-          </h2>
+          </h1>
           <p className="text-dominus-text-primary/60 max-w-2xl mx-auto text-lg">
             Prepare today. Prosper tomorrow. Reach out to Dominus Tax
             Consultants and take the first step toward financial empowerment.

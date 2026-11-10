@@ -26,6 +26,9 @@ function stringValue(value: unknown) {
 }
 
 function databaseError(operation: string, error: { message: string; code?: string }): never {
+  if (/fetch failed|failed to fetch|network/i.test(error.message)) {
+    throw new HttpError(503, 'CRM database is temporarily unavailable. Please try again after the database service resumes.');
+  }
   throw new Error(`${operation} failed (${error.code || 'unknown'}): ${error.message}`);
 }
 

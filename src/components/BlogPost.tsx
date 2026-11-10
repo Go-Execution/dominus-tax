@@ -43,6 +43,8 @@ export default function BlogPost({ id, onNavigate }: { id: string; onNavigate: (
               src={blog.image} 
               alt={blog.title} 
               className="w-full h-full object-cover"
+              width={1672}
+              height={941}
             />
           </div>
         </div>

@@ -5,6 +5,7 @@ import { errorResponse, jsonResponse } from '../server/src/webResponse.js';
 
 const CLIENT_FORM_ID = '262376514662461';
 const CONSULTANT_FORM_ID = '262339213591053';
+const MAX_JOTFORM_BYTES = 1024 * 1024;
 
 function safeEqual(left: string, right: string) {
   const leftBuffer = Buffer.from(left);
@@ -45,8 +46,17 @@ export function mapJotformPayload(form: FormData) {
 export async function POST(request: Request) {
   try {
     const expected = process.env.INTAKE_WEBHOOK_SECRET?.trim() || '';
-    const received = new URL(request.url).searchParams.get('token') || '';
+    const received = request.headers.get('x-dominus-webhook-secret')?.trim()
+      || new URL(request.url).searchParams.get('token')
+      || '';
     if (!expected || !safeEqual(expected, received)) throw new HttpError(401, 'Invalid webhook credentials.');
+
+    const contentType = request.headers.get('content-type')?.toLowerCase() || '';
+    if (!contentType.includes('multipart/form-data') && !contentType.includes('application/x-www-form-urlencoded')) {
+      throw new HttpError(415, 'Jotform webhook must use form data.');
+    }
+    const contentLength = Number(request.headers.get('content-length') || 0);
+    if (contentLength > MAX_JOTFORM_BYTES) throw new HttpError(413, 'Jotform payload is too large.');
 
     const form = await request.formData();
     const payload = mapJotformPayload(form);
