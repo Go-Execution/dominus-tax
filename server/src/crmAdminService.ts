@@ -66,7 +66,7 @@ export class CrmAdminService {
 
     const { data: stageRows, error: stageError } = await this.client
       .from('crm_pipeline_stages')
-      .select('id, slug, name, position, color, requires_attention, pipeline:crm_pipelines!inner(id, slug, name, contact_type)')
+      .select('id, slug, name, position, color, requires_attention, is_closed, pipeline:crm_pipelines!inner(id, slug, name, contact_type)')
       .order('position');
     if (stageError) databaseError('Load CRM stages', stageError);
 
@@ -157,6 +157,7 @@ export class CrmAdminService {
           position: row.position,
           color: row.color,
           requiresAttention: row.requires_attention,
+          isClosed: row.is_closed,
           pipeline: { id: String(pipeline.id), slug: String(pipeline.slug), name: String(pipeline.name), journey: String(pipeline.contact_type) },
         };
       }),

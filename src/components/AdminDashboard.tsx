@@ -6,7 +6,7 @@ import type { Session } from '@supabase/supabase-js';
 import { isLocalAdminBypass, isSupabaseConfigured, supabase } from '@/lib/supabase';
 import CrmWorkspace from './crm/CrmWorkspace';
 import { demoDashboardData } from './crm/demoData';
-import type { ContactDetail, CrmIdentity, CrmRecord, CrmView, DashboardData } from './crm/model';
+import type { ContactDetail, CrmIdentity, CrmJourney, CrmRecord, CrmView, DashboardData } from './crm/model';
 
 const isTemporaryPasswordAuth = import.meta.env.VITE_TEMP_ADMIN_AUTH_ENABLED === 'true';
 
@@ -38,7 +38,7 @@ export default function AdminDashboard() {
   const [error, setError] = useState<string | null>(null);
   const [updatingId, setUpdatingId] = useState<string | null>(null);
   const [searchInput, setSearchInput] = useState('');
-  const [filters, setFilters] = useState({ search: '', journey: 'all', stage: 'all', assignedTo: 'all', page: 1 });
+  const [filters, setFilters] = useState<{ search: string; journey: CrmJourney | 'all'; stage: string; assignedTo: string; page: number }>({ search: '', journey: 'all', stage: 'all', assignedTo: 'all', page: 1 });
   const [selected, setSelected] = useState<CrmRecord | null>(null);
   const [detail, setDetail] = useState<ContactDetail | null>(null);
   const [detailLoading, setDetailLoading] = useState(false);
@@ -230,11 +230,15 @@ export default function AdminDashboard() {
 
   const workspaceData = data || (isLocalAdminBypass ? previewData : null);
   const visibleWorkspaceData = useMemo(() => {
-    if (!workspaceData || data || !filters.search.trim()) return workspaceData;
-    const query = filters.search.toLowerCase();
-    const records = workspaceData.records.filter((record) => [record.contact.firstName, record.contact.lastName, record.contact.email, record.contact.phone].filter(Boolean).join(' ').toLowerCase().includes(query));
-    return { ...workspaceData, records, pagination: { ...workspaceData.pagination, total: records.length } };
-  }, [data, filters.search, workspaceData]);
+    if (!workspaceData || data) return workspaceData;
+    const query = filters.search.trim().toLowerCase();
+    const records = workspaceData.records.filter((record) =>
+      (filters.journey === 'all' || record.contact.journey === filters.journey) &&
+      (!query || [record.contact.firstName, record.contact.lastName, record.contact.email, record.contact.phone]
+        .filter(Boolean).join(' ').toLowerCase().includes(query)),
+    );
+    return { ...workspaceData, records, pagination: { ...workspaceData.pagination, page: 1, total: records.length, totalPages: 1 } };
+  }, [data, filters.journey, filters.search, workspaceData]);
   const stagesFor = useCallback((record: CrmRecord) => (workspaceData?.stages || []).filter((stage) => stage.pipeline?.id === record.pipeline.id), [workspaceData?.stages]);
 
   if (authLoading) return <div className="flex min-h-screen items-center justify-center bg-dominus-black" role="status" aria-label="Loading secure CRM access"><RefreshCw className="h-8 w-8 animate-spin text-dominus-gold" aria-hidden="true" /></div>;
@@ -254,9 +258,17 @@ export default function AdminDashboard() {
       error={error}
       identityName={identity?.fullName || 'Amanda'}
       activeView={activeView}
+      selectedJourney={filters.journey === 'consultant' ? 'consultant' : 'tax-client'}
+      journeyFilter={filters.journey}
       searchInput={searchInput}
       updatingId={updatingId}
-      onViewChange={setActiveView}
+      onViewChange={(view) => {
+        setActiveView(view);
+        setFilters((current) => ({ ...current, journey: view === 'pipeline' ? 'tax-client' : 'all', page: 1 }));
+      }}
+      onJourneyChange={(journey: CrmJourney) => setFilters((current) => ({ ...current, journey, page: 1 }))}
+      onJourneyFilterChange={(journey) => setFilters((current) => ({ ...current, journey, page: 1 }))}
+      onPageChange={(page) => setFilters((current) => ({ ...current, page }))}
       onSearchInput={setSearchInput}
       onSearch={() => setFilters((current) => ({ ...current, search: searchInput, page: 1 }))}
       onRefresh={() => void loadDashboard()}
