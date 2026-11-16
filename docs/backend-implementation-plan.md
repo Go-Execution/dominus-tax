@@ -4,19 +4,18 @@
 
 - The deployed Vercel project is `dominus-tax-consultant`, connected to `Go-Execution/dominus-tax`.
 - The temporary password bridge remains the selected authentication method for now.
-- The production Vercel project has the four temporary auth variables, but no Supabase variables.
-- The repository's local Supabase URL points to project `kesnpnemueiboytoemwa`. The currently signed-in Supabase account has no access to it, and its endpoint is unreachable. The project owner will grant access; keep this existing project.
-- The repository already has migrations for intake, privacy controls, CRM contacts, two pipelines, stages, opportunities, tasks, tags, and activity history. Their deployment state cannot be verified until the correct project is accessible.
+- The production Vercel project has the four temporary auth variables and the four required Supabase variables (`SUPABASE_URL`, `SUPABASE_SECRET_KEY`, `VITE_SUPABASE_URL`, and `VITE_SUPABASE_PUBLISHABLE_KEY`). The temporary password bridge remains enabled.
+- The repository's local Supabase URL points to project `kesnpnemueiboytoemwa`. On 2026-11-17, its owner account opened the project in Opera and the dashboard reported Healthy. Its API endpoint and publishable key respond. The server secret key currently saved in `.env.production.local` is invalid for this project; replace it with the current key without exposing it in Git, chat, or logs.
+- The repository already has migrations for intake, privacy controls, CRM contacts, two pipelines, stages, opportunities, tasks, tags, and activity history. The project table editor shows these CRM tables and both pipelines have 11 stages. The dashboard reports no tracked migrations, so the existing schema appears to have been applied outside the migration tracker. The two November 17 forward migrations were applied in the SQL Editor: journey-scoped contact email uniqueness and the server-only `crm_create_manual_lead` function. The function grants `service_role` execute access and denies `anon`.
 - The existing Vercel API has read endpoints for dashboard/contact detail and write endpoints for opportunity updates and contact notes. Intake and Jotform receivers create CRM contacts and opportunities through the server adapter. These operations are coded, but live database behavior is unverified.
 
 ## Connection sequence
 
-1. Regain access to `kesnpnemueiboytoemwa` in Supabase. Confirm its project URL, publishable key, and server secret key. Keep the secret out of Git and browser code.
-2. Apply `supabase/migrations` in timestamp order. Inspect existing migration history first; do not rerun a migration that has already been applied or edit an applied migration.
-3. Run `npm run check:supabase` locally with a matching `.env.production.local`. It checks endpoint availability, the CRM tables, and 11 seeded stages in each pipeline. It prints no credentials or contact records.
-4. Configure `SUPABASE_URL` and `SUPABASE_SECRET_KEY` as server variables on **dominus-tax-consultant**, plus `VITE_SUPABASE_URL` and `VITE_SUPABASE_PUBLISHABLE_KEY` for the browser build. Preserve the four temporary password variables. Add `INTAKE_WEBHOOK_SECRET` only when the Jotform sender is ready.
-5. Redeploy the correct Vercel project, then verify `/api/health` returns `healthy`, unauthorized admin requests return `401`, and a temporary-password session can load a real empty dashboard.
-6. Send one synthetic submission for each approved form through the protected intake endpoint. Confirm a single contact and opportunity in the correct pipeline, then repeat each submission ID to verify idempotency. Use test identities, not taxpayer information.
+1. Use the existing healthy project `kesnpnemueiboytoemwa`. Keep its current server secret out of Git and browser code. The schema and November 17 forward changes have been audited and applied; do not rerun the older foundational migrations.
+2. Replace the stale server key in the ignored local `.env.production.local`, then run `npm run check:supabase`. It checks endpoint availability, the CRM tables, and 11 seeded stages in each pipeline. It prints no credentials or contact records.
+3. Redeploy **dominus-tax-consultant** using the four Production Supabase variables already configured. Preserve the four temporary password variables. Add `INTAKE_WEBHOOK_SECRET` only when the Jotform sender is ready.
+4. Verify `/api/health` returns `healthy`, unauthorized admin requests return `401`, and a temporary-password session can load a real empty dashboard.
+5. Send one synthetic submission for each approved form through the protected intake endpoint. Confirm a single contact and opportunity in the correct pipeline, then repeat each submission ID to verify idempotency. Use test identities, not taxpayer information.
 
 ## Backend functionality order
 
@@ -33,6 +32,6 @@
 
 The browser must never receive the Supabase secret key. CRM writes go through authenticated server endpoints. Tax returns, SSNs, bank details, and unrestricted taxpayer documents remain outside this CRM schema.
 
-## Prepared while project access is pending
+## Manual lead API rollout
 
-The `codex/backend-supabase-setup` branch contains the next forward migrations. One allows the same email to exist once per journey, so a consultant who is also a tax client keeps separate records. The other adds `crm_create_manual_lead`, a server-only transaction that inserts a contact, first opportunity, and audit event together. `POST /api/admin/contacts` validates the request and calls that function. Apply the migrations before deploying this API to production; this branch is not live database functionality yet.
+The codebase includes the November 17 migrations and `POST /api/admin/contacts`. The database changes have been applied to the existing project. Deploy this code to activate the API, then verify a synthetic manual lead creates one contact, one opportunity in the correct starting stage, and one activity event.

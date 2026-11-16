@@ -2,13 +2,16 @@ import { createClient } from '@supabase/supabase-js';
 
 const url = process.env.SUPABASE_URL?.trim();
 const key = (process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY)?.trim();
+const publicKey = process.env.VITE_SUPABASE_PUBLISHABLE_KEY?.trim();
 
 function fail(message, code = 1) {
   console.error(`Supabase check failed: ${message}`);
   process.exit(code);
 }
 
-if (!url || !key) fail('SUPABASE_URL and a server secret key are required.');
+if (!url || !key || !publicKey) {
+  fail('SUPABASE_URL, VITE_SUPABASE_PUBLISHABLE_KEY, and a server secret key are required.');
+}
 
 let endpoint;
 try {
@@ -24,7 +27,9 @@ const timeoutFetch = (input, init = {}) => fetch(input, {
 });
 
 try {
-  const health = await timeoutFetch(new URL('/auth/v1/health', endpoint));
+  const health = await timeoutFetch(new URL('/auth/v1/health', endpoint), {
+    headers: { apikey: publicKey },
+  });
   if (!health.ok) fail(`project endpoint returned HTTP ${health.status}.`, 2);
 } catch {
   fail('project endpoint is unreachable. Check project access and whether it is active.', 2);
@@ -44,6 +49,9 @@ for (const [table, column] of [
   ['crm_activity_events', 'id'],
 ]) {
   const { error } = await client.from(table).select(column).limit(1);
+  if (error?.message?.includes('Invalid API key')) {
+    fail('the server secret key is invalid for this project. Replace it with the current server key.', 3);
+  }
   if (error) fail(`${table} is unavailable. Apply the checked-in migrations or verify the server key.`, 3);
 }
 
