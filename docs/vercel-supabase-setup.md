@@ -1,6 +1,6 @@
 # Dominus — Vercel + Supabase Production Setup
 
-The repository is production-structured but is **not deployed**. Complete this checklist when the approved Vercel and Supabase projects are available.
+The website is deployed through the Git-connected `dominus-tax-consultant` Vercel project. The CRM database connection is still pending. See [backend-implementation-plan.md](backend-implementation-plan.md) for the current blocker and work order.
 
 ## Architecture
 
@@ -8,10 +8,11 @@ The repository is production-structured but is **not deployed**. Complete this c
 Browser (Vite on Vercel)
   ├─ public Dominus website
   └─ Amanda dashboard
-       └─ Supabase Auth session JWT
-              ↓ Authorization: Bearer <token>
+       └─ temporary password session cookie (current)
+          or Supabase Auth session JWT (future)
+              ↓ authenticated request
 Vercel Functions (/api)
-  ├─ verify the Supabase JWT against crm_profiles
+  ├─ verify the temporary session cookie now, or Supabase JWT against crm_profiles later
   ├─ enforce admin/consultant role permissions
   ├─ validate intake payloads
   └─ use server-only Supabase secret key
@@ -50,7 +51,7 @@ The production migrations:
 
 Do not restore anonymous `SELECT` access to CRM or appointment tables.
 
-## 3. Create Amanda's administrator account
+## 3. Create Amanda's administrator account (later email-auth phase)
 
 1. In Supabase Dashboard → Authentication → Users, invite/create Amanda's approved email.
 2. Copy the created user's UUID.
@@ -76,7 +77,7 @@ In Supabase Authentication URL settings:
 - Add `http://127.0.0.1:5173/**` for local development.
 - Add the approved Vercel preview pattern if preview logins are required.
 
-The dashboard uses PKCE magic-link authentication and redirects to `/#admin`.
+The future email-auth flow uses PKCE magic-link authentication and redirects to `/#admin`. The current production flow uses the temporary password session.
 
 ## 5. Add Vercel environment variables
 

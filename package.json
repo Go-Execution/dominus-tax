@@ -11,6 +11,7 @@
     "dev:api": "tsx watch server/src/index.ts",
     "start:api": "tsx server/src/index.ts",
     "test:api": "tsx --test server/test/**/*.test.ts",
+    "check:supabase": "node --env-file=.env.production.local scripts/check-supabase.mjs",
     "typecheck:api": "tsc --noEmit -p server/tsconfig.json",
     "typecheck:vercel": "tsc --noEmit -p tsconfig.api.json",
     "build": "vite build",
