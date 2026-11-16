@@ -14,6 +14,15 @@ export const noteSchema = z.object({
   note: z.string().trim().min(1).max(500),
 });
 
+export const manualLeadSchema = z.object({
+  journey: z.enum(['tax-client', 'consultant']),
+  firstName: z.string().trim().min(1).max(100),
+  lastName: z.string().trim().min(1).max(100),
+  email: z.string().trim().toLowerCase().email().max(254),
+  phone: z.string().trim().max(32).optional(),
+  assignedTo: z.uuid().nullable().optional(),
+}).strict();
+
 type RecordValue = Record<string, unknown>;
 
 function firstRelation(value: unknown): RecordValue {
@@ -34,6 +43,30 @@ function databaseError(operation: string, error: { message: string; code?: strin
 
 export class CrmAdminService {
   constructor(private readonly client: SupabaseClient) {}
+
+  async createManualLead(raw: unknown, actorUserId?: string) {
+    const input = manualLeadSchema.parse(raw);
+    const validActor = actorUserId && /^[0-9a-f-]{36}$/i.test(actorUserId) ? actorUserId : null;
+    const { data, error } = await this.client.rpc('crm_create_manual_lead', {
+      p_contact_type: input.journey,
+      p_first_name: input.firstName,
+      p_last_name: input.lastName,
+      p_email: input.email,
+      p_phone: input.phone || null,
+      p_assigned_to: input.assignedTo || null,
+      p_actor_user_id: validActor,
+    });
+    if (error?.code === '23505') {
+      throw new HttpError(409, 'A contact with this email already exists in this journey.');
+    }
+    if (error?.code === '22023') throw new HttpError(400, 'The lead cannot be added with these details.');
+    if (error) databaseError('Create manual CRM lead', error);
+    const created = Array.isArray(data) ? data[0] : data;
+    if (!created?.contact_id || !created?.opportunity_id) {
+      throw new Error('Create manual CRM lead returned no record identifiers.');
+    }
+    return { contactId: created.contact_id, opportunityId: created.opportunity_id };
+  }
 
   async dashboard(url: URL) {
     const search = (url.searchParams.get('search') || '').trim().toLowerCase();

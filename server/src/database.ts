@@ -116,8 +116,9 @@ export class IntakeRepository implements IntakeStore {
         FOREIGN KEY (created_by) REFERENCES crm_profiles(user_id)
       );
 
+      DROP INDEX IF EXISTS uq_local_crm_contacts_email;
       CREATE UNIQUE INDEX IF NOT EXISTS uq_local_crm_contacts_email
-        ON crm_contacts(lower(email))
+        ON crm_contacts(contact_type, lower(email))
         WHERE email IS NOT NULL AND is_archived = 0;
       CREATE INDEX IF NOT EXISTS idx_local_crm_contacts_assignment
         ON crm_contacts(assigned_to, contact_type, is_archived);

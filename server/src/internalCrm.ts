@@ -49,6 +49,7 @@ export class InternalCrmAdapter implements GhlAdapter {
       const { data: byEmail, error: emailLookupError } = await this.client
         .from('crm_contacts')
         .select('id, source_submission_id')
+        .eq('contact_type', payload.journey)
         .eq('email_normalized', payload.email.trim().toLowerCase())
         .eq('is_archived', false)
         .maybeSingle();

@@ -136,3 +136,20 @@ test('supports an assigned contact, opportunity, task, and audit event locally',
   });
   repository.close();
 });
+
+test('same email can represent separate tax-client and consultant journeys', () => {
+  const repository = new IntakeRepository(':memory:');
+  const insert = repository.database.prepare(`
+    INSERT INTO crm_contacts (
+      id, contact_type, first_name, last_name, email, created_at, updated_at
+    ) VALUES (?, ?, ?, ?, ?, ?, ?)
+  `);
+  const now = '2026-11-17T00:00:00.000Z';
+  insert.run('tax-contact', 'tax-client', 'Test', 'Client', 'shared@example.com', now, now);
+  insert.run('consultant-contact', 'consultant', 'Test', 'Consultant', 'SHARED@example.com', now, now);
+  assert.throws(
+    () => insert.run('duplicate-tax-contact', 'tax-client', 'Other', 'Client', 'shared@example.com', now, now),
+    /UNIQUE constraint failed/,
+  );
+  repository.close();
+});
