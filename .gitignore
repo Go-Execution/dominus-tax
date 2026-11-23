@@ -27,4 +27,5 @@ supabase/.temp/
 .codex-temp/
 
 .vercel
+.tmp/
 .env*

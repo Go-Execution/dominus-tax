@@ -14,8 +14,8 @@
     "check:supabase": "node --env-file=.env.production.local scripts/check-supabase.mjs",
     "typecheck:api": "tsc --noEmit -p server/tsconfig.json",
     "typecheck:vercel": "tsc --noEmit -p tsconfig.api.json",
-    "build": "vite build",
-    "build:vercel": "npm run typecheck && npm run typecheck:vercel && vite build",
+    "build": "vite build && node scripts/build-website.mjs",
+    "build:vercel": "node scripts/build-website.mjs --schema-only && npm run typecheck && npm run typecheck:vercel && vite build && node scripts/build-website.mjs",
     "lint": "eslint .",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit -p tsconfig.app.json"
