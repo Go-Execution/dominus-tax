@@ -1,5 +1,16 @@
 # Dominus CRM backend implementation plan
 
+## Verification update — 2026-11-25
+
+- `dominus-tax-consultant` is still connected to `Go-Execution/dominus-tax`. The live homepage, `/portal.html`, `/cms`, and `/api/health` returned HTTP 200; an unauthenticated contact edit returned HTTP 401.
+- CRM manual lead entry, contact editing, and accurate dashboard pagination beyond 500 opportunities have been added to the portal and deployed. The production bundle contains those controls. Build, lint, and 28 API tests passed locally.
+- `/api/health` reports the production Supabase connection as healthy. The local `.env.production.local` server key is stale, so authenticated create/update tests against the real project remain unverified. Do not infer database write success from the health check.
+- The Supabase integration currently connected to Codex does not list project `kesnpnemueiboytoemwa`; reconnect it with an account that owns or can access that project before making database changes.
+- Jotform webhook delivery, Calendly booking sync, task CRUD, consultant workspace, email/SMS automation, campaigns, and monitoring/restore procedures remain unverified or unimplemented. The temporary administrator password is still the selected authentication method.
+- The production Vercel environment currently has no `INTAKE_WEBHOOK_SECRET`. The Jotform receiver therefore rejects submissions until a shared secret is set in Vercel and the matching webhook URL or header is configured for both Jotform forms.
+
+The sections below preserve the original implementation sequence and earlier investigation notes.
+
 ## Current state — 2026-11-17
 
 - The deployed Vercel project is `dominus-tax-consultant`, connected to `Go-Execution/dominus-tax`.
