@@ -17,7 +17,7 @@ export const noteSchema = z.object({
 export const contactUpdateSchema = z.object({
   firstName: z.string().trim().min(1).max(100).optional(),
   lastName: z.string().trim().min(1).max(100).optional(),
-  email: z.string().trim().toLowerCase().email().max(254).optional(),
+  email: z.string().trim().toLowerCase().email().max(254).nullable().optional(),
   phone: z.string().trim().max(32).nullable().optional(),
 }).strict().refine((value) => Object.keys(value).length > 0, 'At least one field is required.');
 

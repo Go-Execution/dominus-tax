@@ -10,6 +10,7 @@ test('contact edits normalize fields and reject unrelated or empty payloads', ()
   assert.throws(() => contactUpdateSchema.parse({}));
   assert.throws(() => contactUpdateSchema.parse({ ssn: '123-45-6789' }));
   assert.throws(() => contactUpdateSchema.parse({ email: 'invalid' }));
+  assert.deepEqual(contactUpdateSchema.parse({ email: null }), { email: null });
 });
 
 test('contact edit persists safe fields and records an audit event', async () => {
