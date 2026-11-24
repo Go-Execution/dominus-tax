@@ -34,3 +34,31 @@ export async function PATCH(request: Request) {
   }
 }
 
+export async function POST(request: Request) {
+  try {
+    requireSameOrigin(request);
+    const runtime = getProductionRuntime();
+    const actor = await requireAdmin(request, runtime.supabase);
+    const task = await runtime.crmAdminService.createTask(
+      routeId(request), await readLimitedJson(request), actor.id,
+    );
+    return jsonResponse({ task }, 201);
+  } catch (error) {
+    return errorResponse(error);
+  }
+}
+
+export async function PUT(request: Request) {
+  try {
+    requireSameOrigin(request);
+    const runtime = getProductionRuntime();
+    const actor = await requireAdmin(request, runtime.supabase);
+    const task = await runtime.crmAdminService.setTaskCompleted(
+      routeId(request), await readLimitedJson(request), actor.id,
+    );
+    return jsonResponse({ task });
+  } catch (error) {
+    return errorResponse(error);
+  }
+}
+

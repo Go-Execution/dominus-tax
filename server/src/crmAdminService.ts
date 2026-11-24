@@ -21,6 +21,19 @@ export const contactUpdateSchema = z.object({
   phone: z.string().trim().max(32).nullable().optional(),
 }).strict().refine((value) => Object.keys(value).length > 0, 'At least one field is required.');
 
+export const taskCreateSchema = z.object({
+  title: z.string().trim().min(1).max(180),
+  description: z.string().trim().max(2000).optional(),
+  priority: z.enum(['low', 'normal', 'high', 'urgent']).default('normal'),
+  dueAt: z.iso.datetime().nullable().optional(),
+  assignedTo: z.uuid().nullable().optional(),
+}).strict();
+
+export const taskStatusSchema = z.object({
+  taskId: z.uuid(),
+  completed: z.boolean(),
+}).strict();
+
 export const manualLeadSchema = z.object({
   journey: z.enum(['tax-client', 'consultant']),
   firstName: z.string().trim().min(1).max(100),
@@ -317,6 +330,59 @@ export class CrmAdminService {
     });
     if (activityError) databaseError('Record contact update', activityError);
     return updated;
+  }
+
+  async createTask(contactId: string, raw: unknown, actorUserId?: string) {
+    const input = taskCreateSchema.parse(raw);
+    const { data: contact, error } = await this.client.from('crm_contacts')
+      .select('id, is_archived').eq('id', contactId).maybeSingle();
+    if (error) databaseError('Find task contact', error);
+    if (!contact || contact.is_archived) throw new HttpError(404, 'Contact not found.');
+    if (input.assignedTo) {
+      const { data: profile, error: profileError } = await this.client.from('crm_profiles')
+        .select('user_id').eq('user_id', input.assignedTo).eq('is_active', true).maybeSingle();
+      if (profileError) databaseError('Validate task assignee', profileError);
+      if (!profile) throw new HttpError(400, 'Assigned user is not active.');
+    }
+    const validActor = actorUserId && /^[0-9a-f-]{36}$/i.test(actorUserId) ? actorUserId : null;
+    const { data: task, error: insertError } = await this.client.from('crm_tasks').insert({
+      contact_id: contactId,
+      title: input.title,
+      description: input.description || null,
+      priority: input.priority,
+      due_at: input.dueAt || null,
+      assigned_to: input.assignedTo || null,
+      created_by: validActor,
+    }).select('id, title, priority, status, due_at, assigned_to, created_at').single();
+    if (insertError) databaseError('Create CRM task', insertError);
+    const { error: activityError } = await this.client.from('crm_activity_events').insert({
+      contact_id: contactId, task_id: task.id, actor_user_id: validActor,
+      event_type: 'task.created', summary: 'Follow-up task created',
+    });
+    if (activityError) databaseError('Record task creation', activityError);
+    return task;
+  }
+
+  async setTaskCompleted(contactId: string, raw: unknown, actorUserId?: string) {
+    const input = taskStatusSchema.parse(raw);
+    const { data: existing, error } = await this.client.from('crm_tasks')
+      .select('id, status').eq('id', input.taskId).eq('contact_id', contactId).maybeSingle();
+    if (error) databaseError('Find CRM task', error);
+    if (!existing) throw new HttpError(404, 'Task not found.');
+    const status = input.completed ? 'completed' : 'open';
+    if (existing.status === status) return existing;
+    const { data: task, error: updateError } = await this.client.from('crm_tasks')
+      .update({ status, completed_at: input.completed ? new Date().toISOString() : null })
+      .eq('id', input.taskId).select('id, title, priority, status, due_at, assigned_to, completed_at').single();
+    if (updateError) databaseError('Update CRM task', updateError);
+    const validActor = actorUserId && /^[0-9a-f-]{36}$/i.test(actorUserId) ? actorUserId : null;
+    const { error: activityError } = await this.client.from('crm_activity_events').insert({
+      contact_id: contactId, task_id: input.taskId, actor_user_id: validActor,
+      event_type: input.completed ? 'task.completed' : 'task.reopened',
+      summary: input.completed ? 'Follow-up task completed' : 'Follow-up task reopened',
+    });
+    if (activityError) databaseError('Record task update', activityError);
+    return task;
   }
 
   async addNote(contactId: string, raw: unknown, actorUserId?: string) {
