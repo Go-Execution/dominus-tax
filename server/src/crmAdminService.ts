@@ -76,19 +76,28 @@ export class CrmAdminService {
     const page = Math.max(1, Number(url.searchParams.get('page') || 1) || 1);
     const pageSize = Math.max(10, Math.min(50, Number(url.searchParams.get('pageSize') || 20) || 20));
 
-    const { data: opportunityRows, error } = await this.client
-      .from('crm_opportunities')
-      .select(`
+    // PostgREST applies a server-side row cap even when no limit is requested.
+    // Read every batch so counts and filtered pages do not silently stop at 500.
+    const opportunityRows: RecordValue[] = [];
+    const batchSize = 500;
+    for (let offset = 0; ; offset += batchSize) {
+      const { data: batch, error } = await this.client
+        .from('crm_opportunities')
+        .select(`
         id, title, priority, status, next_action, next_action_at, assigned_to,
         created_at, updated_at,
         contact:crm_contacts!inner(id, contact_type, first_name, last_name, email, phone, lead_source, source_submission_id, assigned_to),
         stage:crm_pipeline_stages!inner(id, slug, name, color, requires_attention, is_closed, position),
         pipeline:crm_pipelines!inner(id, slug, name)
       `)
-      .neq('status', 'archived')
-      .order('updated_at', { ascending: false })
-      .limit(500);
-    if (error) databaseError('Load CRM opportunities', error);
+        .neq('status', 'archived')
+        .order('updated_at', { ascending: false })
+        .order('id', { ascending: false })
+        .range(offset, offset + batchSize - 1);
+      if (error) databaseError('Load CRM opportunities', error);
+      opportunityRows.push(...(batch || []) as RecordValue[]);
+      if (!batch || batch.length < batchSize) break;
+    }
 
     const { data: profiles, error: profileError } = await this.client
       .from('crm_profiles')
@@ -103,7 +112,7 @@ export class CrmAdminService {
       .order('position');
     if (stageError) databaseError('Load CRM stages', stageError);
 
-    const records = (opportunityRows || []).map((row) => {
+    const records = opportunityRows.map((row) => {
       const raw = row as unknown as RecordValue;
       const contact = firstRelation(raw.contact);
       const stage = firstRelation(raw.stage);
