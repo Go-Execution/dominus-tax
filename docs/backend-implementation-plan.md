@@ -4,10 +4,12 @@
 
 - `dominus-tax-consultant` is still connected to `Go-Execution/dominus-tax`. The live homepage, `/portal.html`, `/cms`, and `/api/health` returned HTTP 200; an unauthenticated contact edit returned HTTP 401.
 - CRM manual lead entry, contact editing, and accurate dashboard pagination beyond 500 opportunities have been added to the portal and deployed. The production bundle contains those controls. Build, lint, and 28 API tests passed locally.
-- `/api/health` reports the production Supabase connection as healthy. The local `.env.production.local` server key is stale, so authenticated create/update tests against the real project remain unverified. Do not infer database write success from the health check.
-- The Supabase integration currently connected to Codex does not list project `kesnpnemueiboytoemwa`; reconnect it with an account that owns or can access that project before making database changes.
+- `/api/health` reports the production Supabase connection as healthy. The local `.env.production.local` server key is stale, so authenticated API create/update tests remain unverified. Do not infer API write success from the health check.
+- The connected Supabase integration now lists project `kesnpnemueiboytoemwa` as `ACTIVE_HEALTHY`. Direct inspection found two pipelines and 22 stages, but zero contacts, opportunities, submissions, tasks, and profiles. The manual lead database function succeeded for both journeys inside rolled-back transactions; no test records remain.
+- Migration `harden_crm_helper_function_grants` was applied on 2026-11-25. Anonymous execution of the CRM RLS helpers is now denied; authenticated access needed by their policies remains. The Supabase security advisor no longer reports anonymous execution of these functions.
 - Jotform webhook delivery, Calendly booking sync, task CRUD, consultant workspace, email/SMS automation, campaigns, and monitoring/restore procedures remain unverified or unimplemented. The temporary administrator password is still the selected authentication method.
-- The production Vercel environment currently has no `INTAKE_WEBHOOK_SECRET`. The Jotform receiver therefore rejects submissions until a shared secret is set in Vercel and the matching webhook URL or header is configured for both Jotform forms.
+- A strong `INTAKE_WEBHOOK_SECRET` has been added to the production Vercel environment. Its matching webhook URL is stored only in ignored local file `jotform-webhook-url.local`. Both Jotform forms must be configured to send to that URL; otherwise no website form submission enters CRM. A redeployment is required for the new Vercel variable to take effect.
+- Website CMS storage buckets have not been initialized. The first authenticated website editor load creates the private content bucket; uploaded media creates the public media bucket. No CMS content has been published yet.
 
 The sections below preserve the original implementation sequence and earlier investigation notes.
 
