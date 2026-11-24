@@ -14,6 +14,13 @@ export const noteSchema = z.object({
   note: z.string().trim().min(1).max(500),
 });
 
+export const contactUpdateSchema = z.object({
+  firstName: z.string().trim().min(1).max(100).optional(),
+  lastName: z.string().trim().min(1).max(100).optional(),
+  email: z.string().trim().toLowerCase().email().max(254).optional(),
+  phone: z.string().trim().max(32).nullable().optional(),
+}).strict().refine((value) => Object.keys(value).length > 0, 'At least one field is required.');
+
 export const manualLeadSchema = z.object({
   journey: z.enum(['tax-client', 'consultant']),
   firstName: z.string().trim().min(1).max(100),
@@ -280,6 +287,36 @@ export class CrmAdminService {
     if (activityError) databaseError('Load contact activity', activityError);
     if (taskError) databaseError('Load contact tasks', taskError);
     return { contact, activities: activities || [], tasks: tasks || [] };
+  }
+
+  async updateContact(contactId: string, raw: unknown, actorUserId?: string) {
+    const input = contactUpdateSchema.parse(raw);
+    const values: RecordValue = {};
+    if (input.firstName !== undefined) values.first_name = input.firstName;
+    if (input.lastName !== undefined) values.last_name = input.lastName;
+    if (input.email !== undefined) values.email = input.email;
+    if (input.phone !== undefined) values.phone = input.phone || null;
+
+    const { data: updated, error } = await this.client
+      .from('crm_contacts')
+      .update(values)
+      .eq('id', contactId)
+      .select('id, contact_type, first_name, last_name, email, phone, lead_source, source_submission_id, assigned_to, created_at, updated_at')
+      .maybeSingle();
+    if (error?.code === '23505') throw new HttpError(409, 'A contact with this email already exists in this journey.');
+    if (error) databaseError('Update CRM contact', error);
+    if (!updated) throw new HttpError(404, 'Contact not found.');
+
+    const validActor = actorUserId && /^[0-9a-f-]{36}$/i.test(actorUserId) ? actorUserId : null;
+    const { error: activityError } = await this.client.from('crm_activity_events').insert({
+      contact_id: contactId,
+      actor_user_id: validActor,
+      event_type: 'contact.updated',
+      summary: 'Contact details updated',
+      metadata: { fields: Object.keys(values) },
+    });
+    if (activityError) databaseError('Record contact update', activityError);
+    return updated;
   }
 
   async addNote(contactId: string, raw: unknown, actorUserId?: string) {
