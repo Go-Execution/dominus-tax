@@ -20,7 +20,7 @@ export default function CalendarView({ token, preview }: { token?: string; previ
     if (preview) return;
     const controller = new AbortController();
     setLoading(true); setError(null);
-    void fetch(`/api/admin/calendar?month=${key}`, { credentials: 'include', headers: token ? { authorization: `Bearer ${token}` } : {}, signal: controller.signal })
+    void fetch(`/api/admin/dashboard?view=calendar&month=${key}`, { credentials: 'include', headers: token ? { authorization: `Bearer ${token}` } : {}, signal: controller.signal })
       .then(async (response) => {
         if (!response.ok) throw new Error('Calendar could not be loaded.');
         return response.json() as Promise<CalendarResponse>;
