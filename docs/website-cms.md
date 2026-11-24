@@ -1,6 +1,6 @@
 # Dominus Website Studio
 
-Open `/cms` on the existing domain and use the existing temporary administrator password. The studio has website editing controls only. The existing CRM remains at `/portal.html#admin`; this release does not introduce a separate CMS-only authentication role.
+Open `/cms` on the existing domain and use the existing temporary administrator password. The studio has website editing controls only. The CRM has its own `/crm` route. Both currently use the same temporary administrator session; this release does not introduce a separate CMS-only authentication role.
 
 ## Editing and publishing
 
@@ -20,4 +20,4 @@ The existing Supabase service connection creates private `dominus-website` stora
 
 The public site keeps the supplied content if published content cannot load. Draft preview uses same-origin postMessage and textContent, never editable HTML. Changing the source homepage requires reviewing generated field IDs against saved content before deploying, since IDs follow source order.
 
-Old `/services`, `/about` and `/contact` paths redirect to `/#services`, `/#firm` and `/#book`. Legacy `#about`, `#contact`, `#booking` and `#admin` links are handled by the homepage script. Domain and DNS settings are unchanged.
+Old `/services`, `/about` and `/contact` paths redirect to `/#services`, `/#firm` and `/#book`. `/admin` and legacy `#admin` links lead to `/crm`; legacy `#cms` leads to `/cms`. Domain and DNS settings are unchanged.

@@ -2,7 +2,7 @@
 
 ## Verification update — 2026-11-25
 
-- `dominus-tax-consultant` is still connected to `Go-Execution/dominus-tax`. The live homepage, `/portal.html`, `/cms`, and `/api/health` returned HTTP 200; an unauthenticated contact edit returned HTTP 401.
+- `dominus-tax-consultant` is still connected to `Go-Execution/dominus-tax`. The CRM now has a dedicated `/crm` route and the website studio has `/cms`; both continue to use the temporary administrator session. The live homepage, `/portal.html`, `/cms`, and `/api/health` previously returned HTTP 200; an unauthenticated contact edit returned HTTP 401.
 - CRM manual lead entry, contact editing, and accurate dashboard pagination beyond 500 opportunities have been added to the portal and deployed. The production bundle contains those controls. Build, lint, and 28 API tests passed locally.
 - `/api/health` reports the production Supabase connection as healthy. The local `.env.production.local` server key is stale, so authenticated API create/update tests remain unverified. Do not infer API write success from the health check.
 - The connected Supabase integration now lists project `kesnpnemueiboytoemwa` as `ACTIVE_HEALTHY`. Direct inspection found two pipelines and 22 stages, but zero contacts, opportunities, submissions, tasks, and profiles. The manual lead database function succeeded for both journeys inside rolled-back transactions; no test records remain.

@@ -3,7 +3,7 @@ import test from 'node:test';
 import { mapJotformPayload, POST as receiveJotform } from '../../api/jotform.js';
 import { opportunityUpdateSchema } from '../src/crmAdminService.js';
 import { requireSameOrigin } from '../src/requestSecurity.js';
-import { isHomeAnchor, pageFromHash } from '../../src/lib/navigation.js';
+import { isHomeAnchor, pageFromHash, pageFromLocation } from '../../src/lib/navigation.js';
 
 test('maps the approved tax-client Jotform fields into the intake contract', () => {
   const form = new FormData();
@@ -68,6 +68,9 @@ test('CRM updates require a valid field and same-origin mutations', () => {
 
 test('site hashes route reliably and preserve homepage section anchors', () => {
   assert.equal(pageFromHash('#admin'), 'admin');
+  assert.equal(pageFromLocation('/crm', ''), 'admin');
+  assert.equal(pageFromLocation('/portal.html', ''), 'admin');
+  assert.equal(pageFromLocation('/', '#services'), 'home');
   assert.equal(pageFromHash('#blog/example'), '#blog/example');
   assert.equal(pageFromHash('#services'), 'home');
   assert.equal(isHomeAnchor('#services'), true);

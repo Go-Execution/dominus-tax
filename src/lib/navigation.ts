@@ -11,6 +11,11 @@ export function pageFromHash(hash: string): SitePage {
   return 'home';
 }
 
+export function pageFromLocation(pathname: string, hash: string): SitePage {
+  if (pathname === '/crm' || pathname === '/portal.html') return 'admin';
+  return pageFromHash(hash);
+}
+
 export function isHomeAnchor(hash: string) {
   return HOME_ANCHORS.has(hash);
 }

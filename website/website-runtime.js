@@ -1,5 +1,5 @@
 (async()=>{
- const aliases={'#admin':'/portal.html#admin','#cms':'/cms.html','#about':'/#firm','#contact':'/#book','#booking':'/#book'};
+ const aliases={'#admin':'/crm','#cms':'/cms','#about':'/#firm','#contact':'/#book','#booking':'/#book'};
  if(aliases[location.hash]){location.replace(aliases[location.hash]);return;}
  const initial=new Map();document.querySelectorAll('[data-cms]').forEach(e=>initial.set(e,e.textContent));
  const initialLinks=new Map();document.querySelectorAll('[data-cms-link]').forEach(e=>initialLinks.set(e,e.getAttribute('href')));

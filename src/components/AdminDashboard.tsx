@@ -238,7 +238,7 @@ export default function AdminDashboard() {
   const sendMagicLink = async (event: React.FormEvent) => {
     event.preventDefault(); setAuthMessage(null);
     if (!supabase) return setAuthMessage('Email authentication is not configured.');
-    const { error: signInError } = await supabase.auth.signInWithOtp({ email: email.trim(), options: { emailRedirectTo: `${window.location.origin}/#admin`, shouldCreateUser: false } });
+    const { error: signInError } = await supabase.auth.signInWithOtp({ email: email.trim(), options: { emailRedirectTo: `${window.location.origin}/crm`, shouldCreateUser: false } });
     setAuthMessage(signInError ? signInError.message : 'Secure sign-in link sent. Check the approved work email inbox.');
   };
 

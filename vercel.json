@@ -2,13 +2,16 @@
   "buildCommand": "npm run build:vercel",
   "outputDirectory": "dist",
   "framework": "vite",
-  "rewrites": [{ "source": "/api/health", "destination": "/api/website?health=1" }],
+  "rewrites": [
+    { "source": "/api/health", "destination": "/api/website?health=1" },
+    { "source": "/cms", "destination": "/cms.html" },
+    { "source": "/crm", "destination": "/portal.html" }
+  ],
   "redirects": [
     { "source": "/services", "destination": "/#services", "permanent": true },
     { "source": "/about", "destination": "/#firm", "permanent": true },
     { "source": "/contact", "destination": "/#book", "permanent": true },
-    { "source": "/cms", "destination": "/cms.html", "permanent": false },
-    { "source": "/admin", "destination": "/portal.html#admin", "permanent": false }
+    { "source": "/admin", "destination": "/crm", "permanent": false }
   ],
   "headers": [
     {

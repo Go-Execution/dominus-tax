@@ -14,7 +14,7 @@ import TermsConditions from '@/components/TermsConditions';
 import FloatingForm from '@/components/FloatingForm';
 import useReveal from '@/hooks/useReveal';
 import LeadPathways from '@/components/LeadPathways';
-import { isHomeAnchor, navigateTo, pageFromHash } from '@/lib/navigation';
+import { isHomeAnchor, navigateTo, pageFromLocation } from '@/lib/navigation';
 
 const AdminDashboard = lazy(() => import('@/components/AdminDashboard'));
 const BlogList = lazy(() => import('@/components/BlogList'));
@@ -44,11 +44,11 @@ function WebsiteShell({ children }: { children: ReactNode }) {
 export default function App() {
   useReveal();
 
-  const [page, setPage] = useState(() => pageFromHash(window.location.hash));
+  const [page, setPage] = useState(() => pageFromLocation(window.location.pathname, window.location.hash));
 
   useEffect(() => {
     const onHashChange = () => {
-      setPage(pageFromHash(window.location.hash));
+      setPage(pageFromLocation(window.location.pathname, window.location.hash));
     };
     window.addEventListener('hashchange', onHashChange);
     return () => window.removeEventListener('hashchange', onHashChange);
