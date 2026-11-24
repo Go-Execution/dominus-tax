@@ -13,31 +13,60 @@ function safeEqual(left: string, right: string) {
   return leftBuffer.length === rightBuffer.length && timingSafeEqual(leftBuffer, rightBuffer);
 }
 
-function value(form: FormData, ...names: string[]) {
+function rawRequestValues(form: FormData): Record<string, unknown> {
+  const raw = form.get('rawRequest');
+  if (typeof raw !== 'string' || !raw.trim()) return {};
+  try {
+    const parsed: unknown = JSON.parse(raw);
+    if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
+      return parsed as Record<string, unknown>;
+    }
+  } catch {
+    // A malformed rawRequest cannot be trusted even if other fields are present.
+  }
+  throw new HttpError(400, 'Invalid Jotform rawRequest payload.');
+}
+
+function rawString(raw: Record<string, unknown>, name: string) {
+  let item = raw[name];
+  const nested = name.match(/^([^[]+)\[([^\]]+)\]$/);
+  if (item === undefined && nested) {
+    const parent = raw[nested[1]];
+    if (parent && typeof parent === 'object' && !Array.isArray(parent)) {
+      item = (parent as Record<string, unknown>)[nested[2]];
+    }
+  }
+  return typeof item === 'string' || typeof item === 'number' ? String(item).trim() : '';
+}
+
+function value(form: FormData, raw: Record<string, unknown>, ...names: string[]) {
   for (const name of names) {
     const item = form.get(name);
     if (typeof item === 'string' && item.trim()) return item.trim();
+    const fallback = rawString(raw, name);
+    if (fallback) return fallback;
   }
   return '';
 }
 
 export function mapJotformPayload(form: FormData) {
-  const formId = value(form, 'formID', 'formId');
+  const raw = rawRequestValues(form);
+  const formId = value(form, raw, 'formID', 'formId', 'form_id');
   if (formId !== CLIENT_FORM_ID && formId !== CONSULTANT_FORM_ID) {
     throw new HttpError(400, 'Unknown Jotform form ID.');
   }
   const consultant = formId === CONSULTANT_FORM_ID;
-  const sourceSubmissionId = value(form, 'submissionID', 'submission_id');
+  const sourceSubmissionId = value(form, raw, 'submissionID', 'submission_id', 'id');
   if (!sourceSubmissionId) throw new HttpError(400, 'Jotform submission ID is required.');
 
   return {
     sourceSubmissionId: `jotform:${formId}:${sourceSubmissionId}`,
     journey: consultant ? 'consultant' as const : 'tax-client' as const,
-    firstName: value(form, consultant ? 'q3_name[first]' : 'q3_fullName[first]'),
-    lastName: value(form, consultant ? 'q3_name[last]' : 'q3_fullName[last]'),
-    email: value(form, consultant ? 'q4_email' : 'q4_emailAddress'),
-    phone: value(form, consultant ? 'q6_phoneNumber[full]' : 'q5_phoneNumber[full]'),
-    consent: consultant ? false : Boolean(value(form, 'q30_typeA30')),
+    firstName: value(form, raw, consultant ? 'q3_name[first]' : 'q3_fullName[first]'),
+    lastName: value(form, raw, consultant ? 'q3_name[last]' : 'q3_fullName[last]'),
+    email: value(form, raw, consultant ? 'q4_email' : 'q4_emailAddress'),
+    phone: value(form, raw, consultant ? 'q6_phoneNumber[full]' : 'q5_phoneNumber[full]'),
+    consent: consultant ? false : Boolean(value(form, raw, 'q30_typeA30')),
     submittedAt: new Date().toISOString(),
     details: { source: 'jotform', formId },
   };

@@ -37,6 +37,26 @@ test('maps the approved consultant Jotform fields into the intake contract', () 
   assert.equal(payload.consent, false);
 });
 
+test('maps Jotform rawRequest JSON with nested name and phone fields', () => {
+  const form = new FormData();
+  form.set('rawRequest', JSON.stringify({
+    formID: '262376514662461',
+    id: 'raw-submission-1',
+    q3_fullName: { first: 'Ada', last: 'Lovelace' },
+    q4_emailAddress: 'ada@example.com',
+    q5_phoneNumber: { full: '4325550100' },
+    q30_typeA30: 'I agree',
+  }));
+  const payload = mapJotformPayload(form);
+  assert.equal(payload.sourceSubmissionId, 'jotform:262376514662461:raw-submission-1');
+  assert.equal(payload.firstName, 'Ada');
+  assert.equal(payload.lastName, 'Lovelace');
+  assert.equal(payload.phone, '4325550100');
+  assert.equal(payload.consent, true);
+  form.set('rawRequest', '{invalid');
+  assert.throws(() => mapJotformPayload(form), /Invalid Jotform rawRequest/);
+});
+
 test('CRM updates require a valid field and same-origin mutations', () => {
   assert.equal(opportunityUpdateSchema.parse({ priority: 'urgent' }).priority, 'urgent');
   assert.throws(() => opportunityUpdateSchema.parse({}), /At least one field/);
