@@ -73,4 +73,4 @@ export interface ContactDetail {
   tasks: Array<{ id: string; title: string; priority: string; status: string; due_at: string | null }>;
 }
 
-export type CrmView = 'overview' | 'pipeline' | 'contacts' | 'automations' | 'campaigns';
+export type CrmView = 'overview' | 'pipeline' | 'contacts' | 'calendar' | 'automations' | 'campaigns';

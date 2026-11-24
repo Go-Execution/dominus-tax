@@ -5,6 +5,7 @@ import {
   Phone, Plus, RefreshCw, Search, Send, Settings, Sparkles, TrendingUp, Users, Workflow, X,
 } from 'lucide-react';
 import type { CrmJourney, CrmRecord, CrmView, DashboardData } from './model';
+import CalendarView from './CalendarView';
 
 interface WorkspaceProps {
   data: DashboardData | null;
@@ -12,6 +13,7 @@ interface WorkspaceProps {
   loading: boolean;
   error: string | null;
   identityName: string;
+  authToken?: string;
   activeView: CrmView;
   selectedJourney: CrmJourney;
   journeyFilter: CrmJourney | 'all';
@@ -35,6 +37,7 @@ const navigation = [
   { id: 'overview', label: 'Overview', icon: LayoutDashboard },
   { id: 'pipeline', label: 'Pipeline', icon: TrendingUp },
   { id: 'contacts', label: 'Contacts', icon: ContactRound },
+  { id: 'calendar', label: 'Calendar', icon: CalendarDays },
   { id: 'automations', label: 'Automations', icon: Workflow },
   { id: 'campaigns', label: 'Campaigns', icon: Send },
 ] as const;
@@ -43,6 +46,7 @@ const viewLabels: Record<CrmView, { title: string; eyebrow: string; description:
   overview: { title: 'Command Center', eyebrow: 'CRM Overview', description: 'Your lead flow, follow-ups, and client movement at a glance.' },
   pipeline: { title: 'Opportunity Pipeline', eyebrow: 'Sales Workspace', description: 'Move every prospect from new inquiry to active client.' },
   contacts: { title: 'Contacts', eyebrow: 'Client Directory', description: 'Search, review, and manage every relationship from one place.' },
+  calendar: { title: 'Calendar', eyebrow: 'Team Schedule', description: 'See due tasks and follow-ups across your CRM.' },
   automations: { title: 'Automations', eyebrow: 'Workflow Engine', description: 'Follow-up sequences that keep working while your team is busy.' },
   campaigns: { title: 'Campaigns', eyebrow: 'Email & SMS', description: 'Create focused outreach for leads, clients, and tax-season reminders.' },
 };
@@ -95,7 +99,6 @@ export default function CrmWorkspace(props: WorkspaceProps) {
         return <button key={id} type="button" onClick={() => closeAndNavigate(id)} className={`group flex w-full items-center gap-3 rounded-xl px-3 py-3 text-sm transition ${active ? 'bg-dominus-emerald text-white shadow-emerald-glow' : 'text-white/50 hover:bg-white/[0.05] hover:text-white'}`} aria-current={active ? 'page' : undefined}><Icon className={`h-[18px] w-[18px] ${active ? 'text-dominus-gold-light' : 'text-white/35 group-hover:text-dominus-gold'}`} /><span className="font-medium">{label}</span>{id === 'contacts' && data && <span className="ml-auto rounded-full bg-white/10 px-2 py-0.5 text-[10px]">{data.metrics.total}</span>}</button>;
       })}
       <p className="mb-3 mt-8 px-3 text-[9px] font-bold uppercase tracking-[0.24em] text-white/25">Tools</p>
-      <button type="button" disabled className="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-sm text-white/35"><CalendarDays className="h-[18px] w-[18px]" /> Calendar <span className="ml-auto rounded-full border border-white/10 px-2 py-0.5 text-[9px] text-white/30">Soon</span></button>
       <button type="button" disabled title="Settings are coming later" className="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-sm text-white/35"><Settings className="h-[18px] w-[18px]" /> Settings</button>
     </nav>
     <div className="border-t border-white/[0.07] p-4">
@@ -123,6 +126,7 @@ export default function CrmWorkspace(props: WorkspaceProps) {
         {props.activeView === 'overview' && <Overview data={data} onOpenRecord={props.onOpenRecord} />}
         {props.activeView === 'pipeline' && <Pipeline groups={stageGroups} profiles={data?.profiles || []} selectedJourney={props.selectedJourney} onJourneyChange={props.onJourneyChange} pagination={data?.pagination} metrics={data?.metrics} onPageChange={props.onPageChange} updatingId={props.updatingId} onOpenRecord={props.onOpenRecord} onUpdateRecord={props.onUpdateRecord} />}
         {props.activeView === 'contacts' && <Contacts data={data} journeyFilter={props.journeyFilter} onJourneyFilterChange={props.onJourneyFilterChange} onPageChange={props.onPageChange} searchInput={props.searchInput} onSearchInput={props.onSearchInput} onSearch={props.onSearch} onOpenRecord={props.onOpenRecord} />}
+        {props.activeView === 'calendar' && <CalendarView token={props.authToken} preview={props.isPreview} />}
         {props.activeView === 'automations' && <Automations />}
         {props.activeView === 'campaigns' && <Campaigns />}
       </main>

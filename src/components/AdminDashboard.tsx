@@ -341,6 +341,7 @@ export default function AdminDashboard() {
       loading={loading}
       error={error}
       identityName={identity?.fullName || 'Amanda'}
+      authToken={session?.access_token}
       activeView={activeView}
       selectedJourney={filters.journey === 'consultant' ? 'consultant' : 'tax-client'}
       journeyFilter={filters.journey}
