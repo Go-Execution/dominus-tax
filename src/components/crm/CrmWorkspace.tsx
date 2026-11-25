@@ -1,11 +1,12 @@
 import { useMemo, useState } from 'react';
 import {
-  Activity, Bell, Bot, CalendarDays, CheckCircle2, ChevronDown, CircleAlert, ContactRound,
-  Filter, LayoutDashboard, LogOut, Mail, Menu, MessageSquareText, MoreHorizontal, PanelLeftClose,
-  Phone, Plus, RefreshCw, Search, Send, Settings, Sparkles, TrendingUp, Users, Workflow, X,
+  Activity, BadgeCheck, Bell, Bot, CalendarDays, CheckCircle2, ChevronDown, CircleAlert, CircleDollarSign, ContactRound,
+  FileCheck2, FileText, Filter, FolderOpen, GraduationCap, LayoutDashboard, LogOut, Mail, Menu, MessageSquareText, MoreHorizontal, PanelLeftClose,
+  Phone, Plus, RefreshCw, Search, Send, Settings, Sparkles, TrendingUp, UserRoundCheck, Users, Workflow, X,
 } from 'lucide-react';
 import type { CrmJourney, CrmRecord, CrmView, DashboardData } from './model';
 import CalendarView from './CalendarView';
+import RecordsPreview from './RecordsPreview';
 
 interface WorkspaceProps {
   data: DashboardData | null;
@@ -33,11 +34,25 @@ interface WorkspaceProps {
   onAddLead: () => void;
 }
 
-const navigation = [
+const primaryNavigation = [
   { id: 'overview', label: 'Overview', icon: LayoutDashboard },
   { id: 'pipeline', label: 'Pipeline', icon: TrendingUp },
-  { id: 'contacts', label: 'Contacts', icon: ContactRound },
   { id: 'calendar', label: 'Calendar', icon: CalendarDays },
+] as const;
+
+const recordsNavigation = [
+  { id: 'consultants', label: 'Consultants', icon: UserRoundCheck },
+  { id: 'clients', label: 'Clients', icon: ContactRound },
+  { id: 'intakes', label: 'Intakes', icon: FileCheck2 },
+  { id: 'returns', label: 'Tax Returns', icon: FileText },
+  { id: 'forms', label: 'Forms', icon: FolderOpen },
+  { id: 'documents', label: 'Documents', icon: FileText },
+  { id: 'refunds', label: 'Refund Tracking', icon: CircleDollarSign },
+] as const;
+
+const teamNavigation = [
+  { id: 'training', label: 'Training', icon: GraduationCap },
+  { id: 'compliance', label: 'Certifications', icon: BadgeCheck },
   { id: 'automations', label: 'Automations', icon: Workflow },
   { id: 'campaigns', label: 'Campaigns', icon: Send },
 ] as const;
@@ -49,6 +64,15 @@ const viewLabels: Record<CrmView, { title: string; eyebrow: string; description:
   calendar: { title: 'Calendar', eyebrow: 'Team Schedule', description: 'See due tasks and follow-ups across your CRM.' },
   automations: { title: 'Automations', eyebrow: 'Workflow Engine', description: 'Follow-up sequences that keep working while your team is busy.' },
   campaigns: { title: 'Campaigns', eyebrow: 'Email & SMS', description: 'Create focused outreach for leads, clients, and tax-season reminders.' },
+  consultants: { title: 'Consultants', eyebrow: 'Dominus Team', description: 'Review consultant workload, credentials, training, and required paperwork.' },
+  clients: { title: 'Client 360', eyebrow: 'Client Records', description: 'One complete client history with demographics, returns, forms, documents, and refund status.' },
+  intakes: { title: 'Client Intakes', eyebrow: 'Intake Center', description: 'Track every new intake from submission through document review.' },
+  returns: { title: 'Tax Returns', eyebrow: 'Return Management', description: 'Follow each return from preparation through signature, filing, and acceptance.' },
+  forms: { title: 'Forms', eyebrow: 'Forms Library', description: 'Keep IRS forms, signed agreements, and client forms organized in one place.' },
+  training: { title: 'Training', eyebrow: 'Team Development', description: 'Assign required courses and monitor consultant completion.' },
+  compliance: { title: 'Certifications', eyebrow: 'Compliance Center', description: 'Track PTIN, due diligence, employment paperwork, and expiration dates.' },
+  documents: { title: 'Documents', eyebrow: 'Secure Files', description: 'A unified view of client and consultant paperwork.' },
+  refunds: { title: 'Refund Tracking', eyebrow: 'Client Refunds', description: 'See return and refund progress with clear next actions.' },
 };
 
 function initials(record: CrmRecord) {
@@ -92,13 +116,17 @@ export default function CrmWorkspace(props: WorkspaceProps) {
       </button>
       <button onClick={() => setMobileNavOpen(false)} className="rounded-lg p-2 text-white/45 lg:hidden" aria-label="Close navigation"><X className="h-5 w-5" /></button>
     </div>
-    <nav className="flex-1 space-y-1 px-3 py-5" aria-label="CRM navigation">
+    <nav className="flex-1 space-y-1 overflow-y-auto px-3 py-5" aria-label="CRM navigation">
       <p className="mb-3 px-3 text-[9px] font-bold uppercase tracking-[0.24em] text-white/25">Workspace</p>
-      {navigation.map(({ id, label, icon: Icon }) => {
+      {primaryNavigation.map(({ id, label, icon: Icon }) => {
         const active = props.activeView === id;
-        return <button key={id} type="button" onClick={() => closeAndNavigate(id)} className={`group flex w-full items-center gap-3 rounded-xl px-3 py-3 text-sm transition ${active ? 'bg-dominus-emerald text-white shadow-emerald-glow' : 'text-white/50 hover:bg-white/[0.05] hover:text-white'}`} aria-current={active ? 'page' : undefined}><Icon className={`h-[18px] w-[18px] ${active ? 'text-dominus-gold-light' : 'text-white/35 group-hover:text-dominus-gold'}`} /><span className="font-medium">{label}</span>{id === 'contacts' && data && <span className="ml-auto rounded-full bg-white/10 px-2 py-0.5 text-[10px]">{data.metrics.total}</span>}</button>;
+        return <button key={id} type="button" onClick={() => closeAndNavigate(id)} className={`group flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition ${active ? 'bg-dominus-emerald text-white shadow-emerald-glow' : 'text-white/50 hover:bg-white/[0.05] hover:text-white'}`} aria-current={active ? 'page' : undefined}><Icon className={`h-[18px] w-[18px] ${active ? 'text-dominus-gold-light' : 'text-white/35 group-hover:text-dominus-gold'}`} /><span className="font-medium">{label}</span></button>;
       })}
-      <p className="mb-3 mt-8 px-3 text-[9px] font-bold uppercase tracking-[0.24em] text-white/25">Tools</p>
+      <p className="mb-3 mt-7 px-3 text-[9px] font-bold uppercase tracking-[0.24em] text-white/25">Records</p>
+      {recordsNavigation.map(({ id, label, icon: Icon }) => { const active = props.activeView === id; return <button key={id} type="button" onClick={() => closeAndNavigate(id)} className={`group flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition ${active ? 'bg-dominus-emerald text-white shadow-emerald-glow' : 'text-white/50 hover:bg-white/[0.05] hover:text-white'}`} aria-current={active ? 'page' : undefined}><Icon className={`h-[18px] w-[18px] ${active ? 'text-dominus-gold-light' : 'text-white/35 group-hover:text-dominus-gold'}`} /><span className="font-medium">{label}</span>{id === 'clients' && data && <span className="ml-auto rounded-full bg-white/10 px-2 py-0.5 text-[10px]">{data.metrics.total}</span>}</button>; })}
+      <p className="mb-3 mt-7 px-3 text-[9px] font-bold uppercase tracking-[0.24em] text-white/25">Team & outreach</p>
+      {teamNavigation.map(({ id, label, icon: Icon }) => { const active = props.activeView === id; return <button key={id} type="button" onClick={() => closeAndNavigate(id)} className={`group flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition ${active ? 'bg-dominus-emerald text-white shadow-emerald-glow' : 'text-white/50 hover:bg-white/[0.05] hover:text-white'}`} aria-current={active ? 'page' : undefined}><Icon className={`h-[18px] w-[18px] ${active ? 'text-dominus-gold-light' : 'text-white/35 group-hover:text-dominus-gold'}`} /><span className="font-medium">{label}</span></button>; })}
+      <p className="mb-3 mt-7 px-3 text-[9px] font-bold uppercase tracking-[0.24em] text-white/25">System</p>
       <button type="button" disabled title="Settings are coming later" className="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-sm text-white/35"><Settings className="h-[18px] w-[18px]" /> Settings</button>
     </nav>
     <div className="border-t border-white/[0.07] p-4">
@@ -129,6 +157,7 @@ export default function CrmWorkspace(props: WorkspaceProps) {
         {props.activeView === 'calendar' && <CalendarView token={props.authToken} preview={props.isPreview} />}
         {props.activeView === 'automations' && <Automations />}
         {props.activeView === 'campaigns' && <Campaigns />}
+        {(['consultants','clients','intakes','returns','forms','training','compliance','documents','refunds'] as const).includes(props.activeView as never) && <RecordsPreview view={props.activeView as 'consultants' | 'clients' | 'intakes' | 'returns' | 'forms' | 'training' | 'compliance' | 'documents' | 'refunds'} />}
       </main>
     </div>
   </div>;
