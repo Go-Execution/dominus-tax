@@ -1,12 +1,13 @@
 import { useMemo, useState } from 'react';
 import {
-  Activity, BadgeCheck, Bell, Bot, CalendarDays, CheckCircle2, ChevronDown, CircleAlert, CircleDollarSign, ContactRound,
+  Activity, BadgeCheck, BadgeDollarSign, Bell, Bot, CalendarDays, CheckCircle2, ChevronDown, CircleAlert, CircleDollarSign, ContactRound,
   FileCheck2, FileText, Filter, FolderOpen, GraduationCap, LayoutDashboard, LogOut, Mail, Menu, MessageSquareText, MoreHorizontal, PanelLeftClose,
   Phone, Plus, RefreshCw, Search, Send, Settings, Sparkles, TrendingUp, UserRoundCheck, Users, Workflow, X,
 } from 'lucide-react';
 import type { CrmJourney, CrmRecord, CrmView, DashboardData } from './model';
 import CalendarView from './CalendarView';
 import RecordsPreview from './RecordsPreview';
+import TaxFirmPreview from './TaxFirmPreview';
 
 interface WorkspaceProps {
   data: DashboardData | null;
@@ -50,6 +51,16 @@ const recordsNavigation = [
   { id: 'refunds', label: 'Refund Tracking', icon: CircleDollarSign },
 ] as const;
 
+const firmNavigation = [
+  { id: 'services', label: 'Services & Pricing', icon: BadgeDollarSign },
+  { id: 'deadlines', label: 'Tax Deadlines', icon: CalendarDays },
+  { id: 'efile', label: 'Signatures & E-file', icon: FileCheck2 },
+  { id: 'fees', label: 'Fees & Payouts', icon: CircleDollarSign },
+  { id: 'conversations', label: 'Conversation Log', icon: MessageSquareText },
+  { id: 'reviews', label: 'Reviews & Referrals', icon: Send },
+  { id: 'reports', label: 'Reports', icon: TrendingUp },
+] as const;
+
 const teamNavigation = [
   { id: 'training', label: 'Training', icon: GraduationCap },
   { id: 'compliance', label: 'Certifications', icon: BadgeCheck },
@@ -73,6 +84,13 @@ const viewLabels: Record<CrmView, { title: string; eyebrow: string; description:
   compliance: { title: 'Certifications', eyebrow: 'Compliance Center', description: 'Track PTIN, due diligence, employment paperwork, and expiration dates.' },
   documents: { title: 'Documents', eyebrow: 'Secure Files', description: 'A unified view of client and consultant paperwork.' },
   refunds: { title: 'Refund Tracking', eyebrow: 'Client Refunds', description: 'See return and refund progress with clear next actions.' },
+  services: { title: 'Services & Pricing', eyebrow: 'Service Catalog', description: 'Control what Dominus offers, client pricing, and the consultant split.' },
+  deadlines: { title: 'Tax Deadlines', eyebrow: 'Deadline Calendar', description: 'Keep federal deadlines, extensions, estimates, and notice response dates visible.' },
+  efile: { title: 'Signatures & E-file', eyebrow: 'Filing Control', description: 'Track Form 8879 signatures, acknowledgments, rejections, and documented fixes.' },
+  fees: { title: 'Fees & Payouts', eyebrow: 'Client Money', description: 'Connect quoted fees, collections, and the 70/30 consultant payout.' },
+  conversations: { title: 'Conversation Log', eyebrow: 'Client Communications', description: 'Keep every call, email, SMS, and message on the client record.' },
+  reviews: { title: 'Reviews & Referrals', eyebrow: 'Client Growth', description: 'Trigger review requests and attribute Legacy Bonuses to the right person.' },
+  reports: { title: 'Firm Reporting', eyebrow: 'Weekly Owner View', description: 'Revenue by consultant, acquisition cost by channel, and intake-to-filed cycle time.' },
 };
 
 function initials(record: CrmRecord) {
@@ -124,6 +142,8 @@ export default function CrmWorkspace(props: WorkspaceProps) {
       })}
       <p className="mb-3 mt-7 px-3 text-[9px] font-bold uppercase tracking-[0.24em] text-white/25">Records</p>
       {recordsNavigation.map(({ id, label, icon: Icon }) => { const active = props.activeView === id; return <button key={id} type="button" onClick={() => closeAndNavigate(id)} className={`group flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition ${active ? 'bg-dominus-emerald text-white shadow-emerald-glow' : 'text-white/50 hover:bg-white/[0.05] hover:text-white'}`} aria-current={active ? 'page' : undefined}><Icon className={`h-[18px] w-[18px] ${active ? 'text-dominus-gold-light' : 'text-white/35 group-hover:text-dominus-gold'}`} /><span className="font-medium">{label}</span>{id === 'clients' && data && <span className="ml-auto rounded-full bg-white/10 px-2 py-0.5 text-[10px]">{data.metrics.total}</span>}</button>; })}
+      <p className="mb-3 mt-7 px-3 text-[9px] font-bold uppercase tracking-[0.24em] text-white/25">Tax operations</p>
+      {firmNavigation.map(({ id, label, icon: Icon }) => { const active = props.activeView === id; return <button key={id} type="button" onClick={() => closeAndNavigate(id)} className={`group flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition ${active ? 'bg-dominus-emerald text-white shadow-emerald-glow' : 'text-white/50 hover:bg-white/[0.05] hover:text-white'}`} aria-current={active ? 'page' : undefined}><Icon className={`h-[18px] w-[18px] ${active ? 'text-dominus-gold-light' : 'text-white/35 group-hover:text-dominus-gold'}`} /><span className="font-medium">{label}</span></button>; })}
       <p className="mb-3 mt-7 px-3 text-[9px] font-bold uppercase tracking-[0.24em] text-white/25">Team & outreach</p>
       {teamNavigation.map(({ id, label, icon: Icon }) => { const active = props.activeView === id; return <button key={id} type="button" onClick={() => closeAndNavigate(id)} className={`group flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition ${active ? 'bg-dominus-emerald text-white shadow-emerald-glow' : 'text-white/50 hover:bg-white/[0.05] hover:text-white'}`} aria-current={active ? 'page' : undefined}><Icon className={`h-[18px] w-[18px] ${active ? 'text-dominus-gold-light' : 'text-white/35 group-hover:text-dominus-gold'}`} /><span className="font-medium">{label}</span></button>; })}
       <p className="mb-3 mt-7 px-3 text-[9px] font-bold uppercase tracking-[0.24em] text-white/25">System</p>
@@ -158,6 +178,7 @@ export default function CrmWorkspace(props: WorkspaceProps) {
         {props.activeView === 'automations' && <Automations />}
         {props.activeView === 'campaigns' && <Campaigns />}
         {(['consultants','clients','intakes','returns','forms','training','compliance','documents','refunds'] as const).includes(props.activeView as never) && <RecordsPreview view={props.activeView as 'consultants' | 'clients' | 'intakes' | 'returns' | 'forms' | 'training' | 'compliance' | 'documents' | 'refunds'} />}
+        {(['services','deadlines','efile','fees','conversations','reviews','reports'] as const).includes(props.activeView as never) && <TaxFirmPreview view={props.activeView as 'services' | 'deadlines' | 'efile' | 'fees' | 'conversations' | 'reviews' | 'reports'} />}
       </main>
     </div>
   </div>;
