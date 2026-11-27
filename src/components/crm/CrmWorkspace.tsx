@@ -1,13 +1,14 @@
 import { useMemo, useState } from 'react';
 import {
-  Activity, BadgeDollarSign, Bell, Bot, CalendarDays, CheckCircle2, ChevronDown, CircleAlert, CircleDollarSign, ContactRound,
+  Activity, BadgeDollarSign, Bell, Bot, CalendarDays, CheckCircle2, ChevronDown, CircleAlert, CircleDollarSign, ContactRound, Crown,
   FileCheck2, FileText, Filter, FolderOpen, GraduationCap, LayoutDashboard, LogOut, Mail, Menu, MessageSquareText, MoreHorizontal, PanelLeftClose,
-  Phone, Plus, RefreshCw, Search, Send, Settings, Sparkles, TrendingUp, UserRoundCheck, Users, Workflow, X,
+  Megaphone, Phone, Plus, RefreshCw, Search, Send, Settings, ShoppingBag, Sparkles, Target, TrendingUp, UserRoundCheck, Users, WalletCards, Workflow, X,
 } from 'lucide-react';
 import type { CrmJourney, CrmRecord, CrmView, DashboardData } from './model';
 import CalendarView from './CalendarView';
 import RecordsPreview from './RecordsPreview';
 import TaxFirmPreview from './TaxFirmPreview';
+import BusinessPreview from './BusinessPreview';
 
 interface WorkspaceProps {
   data: DashboardData | null;
@@ -61,6 +62,14 @@ const firmNavigation = [
   { id: 'reports', label: 'Reports', icon: TrendingUp },
 ] as const;
 
+const businessNavigation = [
+  { id: 'opportunities', label: 'Opportunities', icon: Target },
+  { id: 'payments', label: 'Payments', icon: WalletCards },
+  { id: 'marketing', label: 'Marketing', icon: Megaphone },
+  { id: 'memberships', label: 'Memberships', icon: Crown },
+  { id: 'swag', label: 'Dominus Swag', icon: ShoppingBag },
+] as const;
+
 const teamNavigation = [
   { id: 'training', label: 'Training', icon: GraduationCap },
   { id: 'automations', label: 'Automations', icon: Workflow },
@@ -89,6 +98,11 @@ const viewLabels: Record<CrmView, { title: string; eyebrow: string; description:
   conversations: { title: 'Conversation Log', eyebrow: 'Client Communications', description: 'Keep every call, email, SMS, and message on the client record.' },
   reviews: { title: 'Reviews & Referrals', eyebrow: 'Client Growth', description: 'Trigger review requests and attribute Legacy Bonuses to the right person.' },
   reports: { title: 'Firm Reporting', eyebrow: 'Weekly Owner View', description: 'Revenue by consultant, acquisition cost by channel, and intake-to-filed cycle time.' },
+  opportunities: { title: 'Opportunities', eyebrow: 'Growth Pipeline', description: 'Track the value, probability, owner, and next step for every open opportunity.' },
+  payments: { title: 'Payments', eyebrow: 'Revenue & Payouts', description: 'See incoming revenue, outstanding balances, consultant payouts, and recent transactions.' },
+  marketing: { title: 'Marketing', eyebrow: 'Campaign Performance', description: 'Monitor marketing spend, publishing activity, comments, likes, and channel performance.' },
+  memberships: { title: 'Memberships', eyebrow: 'Recurring Programs', description: 'Create and manage Dominus membership plans, benefits, pricing, and active members.' },
+  swag: { title: 'Dominus Swag', eyebrow: 'Merchandise & Orders', description: 'Manage Dominus merchandise, inventory, order activity, and merchandise revenue.' },
 };
 
 function initials(record: CrmRecord) {
@@ -142,6 +156,8 @@ export default function CrmWorkspace(props: WorkspaceProps) {
       {recordsNavigation.map(({ id, label, icon: Icon }) => { const active = props.activeView === id; return <button key={id} type="button" onClick={() => closeAndNavigate(id)} className={`group flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition ${active ? 'bg-dominus-emerald text-white shadow-emerald-glow' : 'text-white/50 hover:bg-white/[0.05] hover:text-white'}`} aria-current={active ? 'page' : undefined}><Icon className={`h-[18px] w-[18px] ${active ? 'text-dominus-gold-light' : 'text-white/35 group-hover:text-dominus-gold'}`} /><span className="font-medium">{label}</span>{id === 'clients' && data && <span className="ml-auto rounded-full bg-white/10 px-2 py-0.5 text-[10px]">{data.metrics.total}</span>}</button>; })}
       <p className="mb-3 mt-7 px-3 text-[9px] font-bold uppercase tracking-[0.24em] text-white/25">Tax operations</p>
       {firmNavigation.map(({ id, label, icon: Icon }) => { const active = props.activeView === id; return <button key={id} type="button" onClick={() => closeAndNavigate(id)} className={`group flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition ${active ? 'bg-dominus-emerald text-white shadow-emerald-glow' : 'text-white/50 hover:bg-white/[0.05] hover:text-white'}`} aria-current={active ? 'page' : undefined}><Icon className={`h-[18px] w-[18px] ${active ? 'text-dominus-gold-light' : 'text-white/35 group-hover:text-dominus-gold'}`} /><span className="font-medium">{label}</span></button>; })}
+      <p className="mb-3 mt-7 px-3 text-[9px] font-bold uppercase tracking-[0.24em] text-white/25">Growth & commerce</p>
+      {businessNavigation.map(({ id, label, icon: Icon }) => { const active = props.activeView === id; return <button key={id} type="button" onClick={() => closeAndNavigate(id)} className={`group flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition ${active ? 'bg-dominus-emerald text-white shadow-emerald-glow' : 'text-white/50 hover:bg-white/[0.05] hover:text-white'}`} aria-current={active ? 'page' : undefined}><Icon className={`h-[18px] w-[18px] ${active ? 'text-dominus-gold-light' : 'text-white/35 group-hover:text-dominus-gold'}`} /><span className="font-medium">{label}</span></button>; })}
       <p className="mb-3 mt-7 px-3 text-[9px] font-bold uppercase tracking-[0.24em] text-white/25">Team & outreach</p>
       {teamNavigation.map(({ id, label, icon: Icon }) => { const active = props.activeView === id; return <button key={id} type="button" onClick={() => closeAndNavigate(id)} className={`group flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition ${active ? 'bg-dominus-emerald text-white shadow-emerald-glow' : 'text-white/50 hover:bg-white/[0.05] hover:text-white'}`} aria-current={active ? 'page' : undefined}><Icon className={`h-[18px] w-[18px] ${active ? 'text-dominus-gold-light' : 'text-white/35 group-hover:text-dominus-gold'}`} /><span className="font-medium">{label}</span></button>; })}
       <p className="mb-3 mt-7 px-3 text-[9px] font-bold uppercase tracking-[0.24em] text-white/25">System</p>
@@ -177,6 +193,7 @@ export default function CrmWorkspace(props: WorkspaceProps) {
         {props.activeView === 'campaigns' && <Campaigns />}
         {(['consultants','clients','intakes','returns','forms','training','documents','refunds'] as const).includes(props.activeView as never) && <RecordsPreview view={props.activeView as 'consultants' | 'clients' | 'intakes' | 'returns' | 'forms' | 'training' | 'documents' | 'refunds'} />}
         {(['services','deadlines','efile','fees','conversations','reviews','reports'] as const).includes(props.activeView as never) && <TaxFirmPreview view={props.activeView as 'services' | 'deadlines' | 'efile' | 'fees' | 'conversations' | 'reviews' | 'reports'} />}
+        {(['opportunities','payments','marketing','memberships','swag'] as const).includes(props.activeView as never) && <BusinessPreview view={props.activeView as 'opportunities' | 'payments' | 'marketing' | 'memberships' | 'swag'} />}
       </main>
     </div>
   </div>;

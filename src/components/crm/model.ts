@@ -75,4 +75,5 @@ export interface ContactDetail {
 
 export type CrmView = 'overview' | 'pipeline' | 'contacts' | 'calendar' | 'automations' | 'campaigns'
   | 'consultants' | 'clients' | 'intakes' | 'returns' | 'forms' | 'training' | 'documents' | 'refunds'
-  | 'services' | 'deadlines' | 'efile' | 'fees' | 'conversations' | 'reviews' | 'reports';
+  | 'services' | 'deadlines' | 'efile' | 'fees' | 'conversations' | 'reviews' | 'reports'
+  | 'opportunities' | 'payments' | 'marketing' | 'memberships' | 'swag';
