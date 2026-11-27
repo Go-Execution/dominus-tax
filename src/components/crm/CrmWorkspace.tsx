@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import {
-  Activity, BadgeCheck, BadgeDollarSign, Bell, Bot, CalendarDays, CheckCircle2, ChevronDown, CircleAlert, CircleDollarSign, ContactRound,
+  Activity, BadgeDollarSign, Bell, Bot, CalendarDays, CheckCircle2, ChevronDown, CircleAlert, CircleDollarSign, ContactRound,
   FileCheck2, FileText, Filter, FolderOpen, GraduationCap, LayoutDashboard, LogOut, Mail, Menu, MessageSquareText, MoreHorizontal, PanelLeftClose,
   Phone, Plus, RefreshCw, Search, Send, Settings, Sparkles, TrendingUp, UserRoundCheck, Users, Workflow, X,
 } from 'lucide-react';
@@ -63,7 +63,6 @@ const firmNavigation = [
 
 const teamNavigation = [
   { id: 'training', label: 'Training', icon: GraduationCap },
-  { id: 'compliance', label: 'Certifications', icon: BadgeCheck },
   { id: 'automations', label: 'Automations', icon: Workflow },
   { id: 'campaigns', label: 'Campaigns', icon: Send },
 ] as const;
@@ -81,7 +80,6 @@ const viewLabels: Record<CrmView, { title: string; eyebrow: string; description:
   returns: { title: 'Tax Returns', eyebrow: 'Return Management', description: 'Follow each return from preparation through signature, filing, and acceptance.' },
   forms: { title: 'Forms', eyebrow: 'Forms Library', description: 'Keep IRS forms, signed agreements, and client forms organized in one place.' },
   training: { title: 'Training', eyebrow: 'Team Development', description: 'Assign required courses and monitor consultant completion.' },
-  compliance: { title: 'Certifications', eyebrow: 'Compliance Center', description: 'Track PTIN, due diligence, employment paperwork, and expiration dates.' },
   documents: { title: 'Documents', eyebrow: 'Secure Files', description: 'A unified view of client and consultant paperwork.' },
   refunds: { title: 'Refund Tracking', eyebrow: 'Client Refunds', description: 'See return and refund progress with clear next actions.' },
   services: { title: 'Services & Pricing', eyebrow: 'Service Catalog', description: 'Control what Dominus offers, client pricing, and the consultant split.' },
@@ -177,7 +175,7 @@ export default function CrmWorkspace(props: WorkspaceProps) {
         {props.activeView === 'calendar' && <CalendarView token={props.authToken} preview={props.isPreview} />}
         {props.activeView === 'automations' && <Automations />}
         {props.activeView === 'campaigns' && <Campaigns />}
-        {(['consultants','clients','intakes','returns','forms','training','compliance','documents','refunds'] as const).includes(props.activeView as never) && <RecordsPreview view={props.activeView as 'consultants' | 'clients' | 'intakes' | 'returns' | 'forms' | 'training' | 'compliance' | 'documents' | 'refunds'} />}
+        {(['consultants','clients','intakes','returns','forms','training','documents','refunds'] as const).includes(props.activeView as never) && <RecordsPreview view={props.activeView as 'consultants' | 'clients' | 'intakes' | 'returns' | 'forms' | 'training' | 'documents' | 'refunds'} />}
         {(['services','deadlines','efile','fees','conversations','reviews','reports'] as const).includes(props.activeView as never) && <TaxFirmPreview view={props.activeView as 'services' | 'deadlines' | 'efile' | 'fees' | 'conversations' | 'reviews' | 'reports'} />}
       </main>
     </div>
