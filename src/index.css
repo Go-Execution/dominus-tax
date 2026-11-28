@@ -104,6 +104,40 @@
     padding-bottom: 1.25rem;
   }
 
+  .crm-command-header {
+    position: relative;
+    min-height: 132px;
+    overflow: hidden;
+    border: 1px solid var(--crm-line-strong);
+    border-radius: 2px;
+    background:
+      linear-gradient(90deg, rgba(5, 7, 5, 0.97) 0%, rgba(10, 20, 15, 0.93) 58%, rgba(48, 37, 13, 0.72) 100%),
+      radial-gradient(circle at 80% 20%, rgba(201, 162, 39, 0.26), transparent 42%);
+  }
+
+  .crm-command-header::before {
+    content: 'D';
+    position: absolute;
+    right: 3.5rem;
+    top: 50%;
+    color: rgba(201, 162, 39, 0.075);
+    font-family: 'Playfair Display', serif;
+    font-size: 10rem;
+    font-weight: 700;
+    line-height: 1;
+    transform: translateY(-54%);
+  }
+
+  .crm-command-header::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(115deg, transparent 0 67%, rgba(201, 162, 39, 0.08) 67% 68%, transparent 68%),
+      repeating-linear-gradient(90deg, transparent 0 70px, rgba(255, 255, 255, 0.012) 70px 71px);
+    pointer-events: none;
+  }
+
   .crm-editorial header {
     border-color: var(--crm-line) !important;
     background-color: rgba(6, 7, 5, 0.94) !important;
@@ -122,6 +156,7 @@
   }
 
   .crm-editorial article {
+    padding: 1rem;
     transition: border-color 180ms ease, background-color 180ms ease;
   }
 
@@ -170,6 +205,26 @@
   .crm-editorial table thead {
     border-top: 1px solid var(--crm-line);
     background-color: rgba(201, 162, 39, 0.025);
+  }
+
+  .crm-editorial table th {
+    padding-bottom: 0.65rem;
+    padding-top: 0.65rem;
+  }
+
+  .crm-editorial table td {
+    padding-bottom: 0.75rem;
+    padding-top: 0.75rem;
+  }
+
+  .crm-editorial article > h2,
+  .crm-editorial article > div:first-child h2 {
+    font-size: 1.05rem;
+  }
+
+  .crm-editorial article [class*='text-3xl'] {
+    font-size: 1.65rem;
+    line-height: 1.15;
   }
 
   .crm-editorial table tr {
